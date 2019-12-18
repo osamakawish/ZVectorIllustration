@@ -16,6 +16,10 @@ public:
     ~PropertyWidget();
 
 private:
+    QColor::Spec spec(int index);
+    void checkOriginButton(int x, int y);
+    void checkAxesDirectionButton(int x, int y);
+
     Ui::PropertyWidget *ui;
 };
 

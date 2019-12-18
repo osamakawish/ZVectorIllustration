@@ -2,7 +2,7 @@
 #define FILEWIDGET_H
 
 #include <QWidget>
-
+#include <QTabWidget>
 
 namespace Ui {
 class FileWidget;
@@ -16,10 +16,11 @@ public:
     explicit FileWidget(QWidget *parent = nullptr);
     ~FileWidget();
 
+    QTabWidget &tabWidget();
+    void newFile();
+
 private:
     Ui::FileWidget *ui;
-
-
 };
 
 #endif // FILEWIDGET_H

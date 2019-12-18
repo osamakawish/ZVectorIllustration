@@ -6,20 +6,48 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1182</width>
-    <height>749</height>
+    <width>1248</width>
+    <height>865</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>800</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,1">
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,0">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
-     <widget class="FileWidget" name="widget" native="true"/>
+     <widget class="FileWidget" name="fileWidget" native="true"/>
     </item>
     <item>
-     <widget class="QWidget" name="widget_2" native="true"/>
+     <widget class="PropertyWidget" name="widget" native="true">
+      <property name="maximumSize">
+       <size>
+        <width>300</width>
+        <height>16777215</height>
+       </size>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -28,7 +56,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1182</width>
+     <width>1248</width>
      <height>26</height>
     </rect>
    </property>
@@ -69,6 +97,9 @@
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
    <attribute name="toolBarArea">
     <enum>LeftToolBarArea</enum>
    </attribute>
@@ -80,6 +111,9 @@
   <widget class="QToolBar" name="vectorToolBar">
    <property name="windowTitle">
     <string>toolBar_2</string>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
    </property>
    <attribute name="toolBarArea">
     <enum>LeftToolBarArea</enum>
@@ -105,6 +139,9 @@
   <action name="actionNew">
    <property name="text">
     <string>New</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
   <action name="actionOpen_Import">
@@ -146,6 +183,12 @@
    <class>FileWidget</class>
    <extends>QWidget</extends>
    <header>filewidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PropertyWidget</class>
+   <extends>QWidget</extends>
+   <header>propertywidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

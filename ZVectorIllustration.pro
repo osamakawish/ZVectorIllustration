@@ -16,6 +16,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    SubWidgets/colorsetter.cpp \
+    SubWidgets/radiobuttongrid.cpp \
     SubWidgets/valuesetter.cpp \
     Windows/settingswindow.cpp \
     Windows/helpwindow.cpp \
@@ -25,6 +27,8 @@ SOURCES += \
     propertywidget.cpp
 
 HEADERS += \
+    SubWidgets/colorsetter.h \
+    SubWidgets/radiobuttongrid.h \
     SubWidgets/valuesetter.h \
     Windows/settingswindow.h \
     Windows/helpwindow.h \
@@ -33,6 +37,8 @@ HEADERS += \
     propertywidget.h
 
 FORMS += \
+    SubWidgets/colorsetter.ui \
+    SubWidgets/radiobuttongrid.ui \
     SubWidgets/valuesetter.ui \
     Windows/settingswindow.ui \
     Windows/helpwindow.ui \
