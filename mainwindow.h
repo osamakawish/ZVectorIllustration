@@ -5,6 +5,7 @@
 #include "Windows/settingswindow.h"
 #include <memory>
 #include <QMainWindow>
+#include <QFileDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,6 +22,11 @@ public:
 private:
     std::unique_ptr<HelpWindow> helpWindow;
     std::unique_ptr<SettingsWindow> settingsWindow;
+
+    void fileDialog(QFileDialog::AcceptMode mode);
+
+    void openFileDialog(); void openFile(int i);
+    void saveFileDialog(); void saveFile(int i);
 
     void prepareWindows();
     void prepareMenuActions();
