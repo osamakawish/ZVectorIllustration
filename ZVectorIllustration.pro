@@ -22,6 +22,7 @@ SOURCES += \
     Windows/settingswindow.cpp \
     Windows/helpwindow.cpp \
     filewidget.cpp \
+    graphicsview.cpp \
     main.cpp \
     mainwindow.cpp \
     propertywidget.cpp
@@ -33,6 +34,7 @@ HEADERS += \
     Windows/settingswindow.h \
     Windows/helpwindow.h \
     filewidget.h \
+    graphicsview.h \
     mainwindow.h \
     propertywidget.h
 
