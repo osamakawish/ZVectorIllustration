@@ -1,4 +1,5 @@
 #include "filewidget.h"
+#include "graphicsview.h"
 #include "ui_filewidget.h"
 #include <iostream>
 #include <set>
@@ -34,5 +35,5 @@ void FileWidget::newFile()
         if (tabText.startsWith(untitled)) {untitledNames.insert(tabText);}
     }
     while (!untitledNames.contains(untitled+QString(j)) && j<tabs->count()) {j++;}
-    tabs->addTab(new QGraphicsView(this),untitled+QString::number(j));
+    tabs->addTab(new GraphicsView(this),untitled+QString::number(j));
 }
