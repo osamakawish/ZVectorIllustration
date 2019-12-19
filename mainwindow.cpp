@@ -26,5 +26,6 @@ void MainWindow::prepareWindows()
 void MainWindow::prepareMenuActions()
 {
     connect(ui->actionNew,&QAction::triggered,ui->fileWidget,&FileWidget::newFile,Qt::UniqueConnection);
+//    connect(ui.)
 }
 

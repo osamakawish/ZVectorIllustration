@@ -23,6 +23,12 @@ ValueSetter::~ValueSetter()
     delete ui;
 }
 
+void ValueSetter::setUnits(QString units)
+{ ui->units->setText(units); }
+
+void ValueSetter::setDecimals(int d)
+{ ui->spinbox->setDecimals(d); }
+
 void ValueSetter::setValue(int value)
 {
     ui->slider->blockSignals(true); ui->spinbox->blockSignals(true);

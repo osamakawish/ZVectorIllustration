@@ -57,9 +57,6 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="ValueSetter" name="dpiSetter" native="true"/>
-          </item>
           <item row="1" column="0">
            <widget class="QLabel" name="sheetLabel">
             <property name="text">
@@ -96,6 +93,9 @@
              <widget class="RadioButtonGrid" name="axesDirectionSelectGrid" native="true"/>
             </item>
            </layout>
+          </item>
+          <item row="0" column="1">
+           <widget class="ValueSetter" name="dpiSetter" native="true"/>
           </item>
          </layout>
         </widget>

@@ -3,13 +3,15 @@
 #include <iostream>
 #include <set>
 #include <QSet>
+#include <QDebug>
 
 FileWidget::FileWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FileWidget)
 {
     ui->setupUi(this);
-
+    newFile();
+    delete ui->tabWidget->widget(0);
 }
 
 FileWidget::~FileWidget()
@@ -32,5 +34,5 @@ void FileWidget::newFile()
         if (tabText.startsWith(untitled)) {untitledNames.insert(tabText);}
     }
     while (!untitledNames.contains(untitled+QString(j)) && j<tabs->count()) {j++;}
-    tabs->addTab(new QGraphicsView(this),untitled+QString(j));
+    tabs->addTab(new QGraphicsView(this),untitled+QString::number(j));
 }

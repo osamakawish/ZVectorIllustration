@@ -19,6 +19,8 @@ public:
     ~ValueSetter();
 
     void dpi(int dpi);
+    void setUnits(QString units);
+    void setDecimals(int d);
     void setValue(int value);
     void setDoubleValue(double value);
     void setMinimum(int minimum);

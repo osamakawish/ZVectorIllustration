@@ -24,6 +24,8 @@ public:
     void disable(int x, int y);
     void enable();
 
+    QRadioButton *checkedButton();
+
     int xLength();
     int yLength();
 
@@ -45,7 +47,6 @@ private:
     bool currentCheckedInExtreme(Extreme x, Extreme y);
 
     int checkedX, checkedY;
-    int disabledX=-1, disabledY=-1; bool hasDisabledButton = false;
     QRadioButton *itemAt(int x, int y);
     void clearGrid();
 

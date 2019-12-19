@@ -45,17 +45,13 @@ void RadioButtonGrid::disable(int x, int y)
     if (button->isChecked()) {return;}
 
     enable(); button->setEnabled(false);
-    disabledX = x; disabledY = y; hasDisabledButton = true;
 }
 
 void RadioButtonGrid::enable()
-{
-    for (int x=0; x<xLength(); ++x) {
-        for (int y=0; y<yLength(); ++y) {
-            itemAt(x,y)->setEnabled(true);
-        }
-    }
-}
+{ for (int x=0; x<xLength(); ++x) { for (int y=0; y<yLength(); ++y) { itemAt(x,y)->setEnabled(true); } } }
+
+QRadioButton *RadioButtonGrid::checkedButton()
+{ return itemAt(checkedX,checkedY);}
 
 int RadioButtonGrid::xLength()
 { return ui->gridLayout->columnCount(); }
@@ -93,12 +89,14 @@ void RadioButtonGrid::edgeSignals(int x, int y)
 
 void RadioButtonGrid::restrictOnlyEdges(Extreme x, Extreme y)
 {
+    enable();
     if (x == Extreme::MIN) {restrictLeft();} else if (x == Extreme::MAX) {restrictRight();}
     if (y == Extreme::MIN) {restrictBottom();} else if (y == Extreme::MAX) {restrictTop();}
     updatedCheckedBox(x,y);
 }
 
 // Note: these are the restricted extremes. Opposite extremes need to be checked.
+// Bug?: Ui checks all boxes when middle is selected. enable() is only possible cause. (NOT SERIOUS)
 void RadioButtonGrid::updatedCheckedBox(Extreme x, Extreme y)
 {
     if ((x==Extreme::MID && y==Extreme::MID)) { enable(); return; }

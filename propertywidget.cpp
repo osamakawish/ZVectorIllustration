@@ -16,6 +16,8 @@ PropertyWidget::PropertyWidget(QWidget *parent) :
     ui->axesDirectionSelectGrid->check(1,1);
 
     ui->originSelectGrid->restrictMutualEdges(ui->axesDirectionSelectGrid);
+
+    ui->dpiSetter->setDecimals(0); ui->dpiSetter->setUnits("px / in");
 }
 
 PropertyWidget::~PropertyWidget()
