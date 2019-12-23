@@ -16,6 +16,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    ActionMethods/mouseaction.cpp \
+    ActionMethods/mousebehaviour.cpp \
+    ActionMethods/penaction.cpp \
+    ActionMethods/textaction.cpp \
+    ActionMethods/zoomaction.cpp \
     SubWidgets/colorsetter.cpp \
     SubWidgets/radiobuttongrid.cpp \
     SubWidgets/valuesetter.cpp \
@@ -28,6 +33,11 @@ SOURCES += \
     propertywidget.cpp
 
 HEADERS += \
+    ActionMethods/mouseaction.h \
+    ActionMethods/mousebehaviour.h \
+    ActionMethods/penaction.h \
+    ActionMethods/textaction.h \
+    ActionMethods/zoomaction.h \
     SubWidgets/colorsetter.h \
     SubWidgets/radiobuttongrid.h \
     SubWidgets/valuesetter.h \

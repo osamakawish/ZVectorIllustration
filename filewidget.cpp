@@ -6,12 +6,17 @@
 #include <QSet>
 #include <QDebug>
 
+#include "ActionMethods/mousebehaviour.h"
+
 FileWidget::FileWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FileWidget)
 {
     ui->setupUi(this);
     newFile();
+    connect(ui->tabWidget,&QTabWidget::currentChanged,this,[=](){
+        MouseBehaviour::setView(dynamic_cast<GraphicsView *>(ui->tabWidget->currentWidget()));
+    });
     delete ui->tabWidget->widget(0);
 }
 
@@ -36,4 +41,5 @@ void FileWidget::newFile()
     }
     while (!untitledNames.contains(untitled+QString(j)) && j<tabs->count()) {j++;}
     tabs->addTab(new GraphicsView(this),untitled+QString::number(j));
+    MouseBehaviour::setView(dynamic_cast<GraphicsView *>(ui->tabWidget->currentWidget()));
 }
