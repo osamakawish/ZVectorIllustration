@@ -3,7 +3,7 @@
 
 #include <memory>
 
-class QWidget;
+class QWidget; class QGraphicsScene;
 class GraphicsView; class QPoint; class QPointF; class QMouseEvent;
 
 //inline QPointF mapPositionToGlobal(QPointF pos)
@@ -12,15 +12,19 @@ class GraphicsView; class QPoint; class QPointF; class QMouseEvent;
 class MouseBehaviour
 {
     static bool IsPressed; static bool IsDoubleClicked;
-    static bool rightClicked;
-    static QPointF Pos; static QPointF DPos;
-    static std::unique_ptr<GraphicsView> view;
+    static bool RightClicked;
+    static QPointF Click; static QPointF DClick;
+    static QPointF Move; static QPointF DMove;
+    static QPointF Release;
+    static std::unique_ptr<GraphicsView> View;
+    static std::unique_ptr<QGraphicsScene> Scene;
 
 public:
     static void setView(GraphicsView *view);
+    static GraphicsView *view(); static QGraphicsScene *scene();
 
     static void press(); static void doubleClick();
-    static void moveTo(QPointF pos);
+    static void rightClick(); static void moveTo(QPointF pos);
     static void move(QPointF dPos); static void release();
 
     static bool isPressed(); static bool isDoubleClicked();

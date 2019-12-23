@@ -1,12 +1,12 @@
 #ifndef MOUSEACTION_H
 #define MOUSEACTION_H
 
-#include <QMouseEvent>
-
-class GraphicsView;
+class GraphicsView; class QPainterPath; class QMouseEvent;
 
 class MouseAction
 {
+    static QPainterPath SelectionPath;
+
 public:
     static void shapePress(QMouseEvent *e);
     static void shapeDoubleClick(QMouseEvent *e);

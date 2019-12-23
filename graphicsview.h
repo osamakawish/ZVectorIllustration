@@ -18,6 +18,8 @@ public:
     GraphicsView(QWidget *parent = nullptr);
     GraphicsView(QGraphicsScene *scene, QWidget *parent = nullptr);
 
+
+
     void mousePressEvent(QMouseEvent *e) override;
     void mouseDoubleClickEvent(QMouseEvent *e) override;
     void mouseMoveEvent(QMouseEvent *e) override;

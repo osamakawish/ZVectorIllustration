@@ -13,10 +13,14 @@ FileWidget::FileWidget(QWidget *parent) :
     ui(new Ui::FileWidget)
 {
     ui->setupUi(this);
+
     newFile();
-    connect(ui->tabWidget,&QTabWidget::currentChanged,this,[=](){
+    // Update MouseBehaviour view when tab changes.
+    connect(ui->tabWidget,&QTabWidget::currentChanged,this,[&](){
+//        qDebug() << dynamic_cast<GraphicsView *>(ui->tabWidget->currentWidget());
         MouseBehaviour::setView(dynamic_cast<GraphicsView *>(ui->tabWidget->currentWidget()));
     });
+
     delete ui->tabWidget->widget(0);
 }
 
@@ -40,6 +44,7 @@ void FileWidget::newFile()
         if (tabText.startsWith(untitled)) {untitledNames.insert(tabText);}
     }
     while (!untitledNames.contains(untitled+QString(j)) && j<tabs->count()) {j++;}
-    tabs->addTab(new GraphicsView(this),untitled+QString::number(j));
-    MouseBehaviour::setView(dynamic_cast<GraphicsView *>(ui->tabWidget->currentWidget()));
+    GraphicsView *view = new GraphicsView(this);
+    tabs->addTab(view,untitled+QString::number(j));
+    tabs->setCurrentWidget(view); /*qDebug() << dynamic_cast<GraphicsView *>(ui->tabWidget->currentWidget());*/
 }
