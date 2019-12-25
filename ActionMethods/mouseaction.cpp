@@ -18,19 +18,20 @@ void MouseAction::shapePress(QMouseEvent *e)
     MouseBehaviour::scene()->setSelectionArea(SelectionPath);
 }
 
-void MouseAction::shapeDoubleClick(QMouseEvent *e)
+void MouseAction::shapeDoubleClick(QMouseEvent */*e*/)
 {}
 
 void MouseAction::shapeMove(QMouseEvent *e)
 {
-    /// Applies only if mouse is pressed.
+    if (!MouseBehaviour::isPressed()) {return;}
     // If something is selected
     // .. if mouse is clicked outside selection, update selection rect.
     // .. if mouse click within selection, prepare to move
 
     // Otherwise, prepare selection rect.
-    SelectionPath = QPainterPath(MouseBehaviour::pos());
-//    selectionPath.addRect(MouseBehaviour::(),MouseBehaviour::) -> need to deal with click position
+    SelectionPath = QPainterPath();
+    SelectionPath.addRect(GraphicsView::rectangle(MouseBehaviour::pos(),e->pos()));
+    MouseBehaviour::scene()->setSelectionArea(SelectionPath);
 }
 
 void MouseAction::shapeRelease(QMouseEvent *e)

@@ -3,9 +3,12 @@
 
 #include "Windows/helpwindow.h"
 #include "Windows/settingswindow.h"
+
 #include <memory>
+
 #include <QMainWindow>
 #include <QFileDialog>
+#include <QActionGroup>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,6 +23,8 @@ public:
     ~MainWindow();
 
 private:
+    QActionGroup graphicsActionGroup;
+
     std::unique_ptr<HelpWindow> helpWindow;
     std::unique_ptr<SettingsWindow> settingsWindow;
 
@@ -30,6 +35,7 @@ private:
 
     void prepareWindows();
     void prepareMenuActions();
+    void prepareGraphicsActions();
 
     Ui::MainWindow *ui;
 };

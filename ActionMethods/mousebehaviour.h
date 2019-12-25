@@ -11,6 +11,7 @@ class GraphicsView; class QPoint; class QPointF; class QMouseEvent;
 
 class MouseBehaviour
 {
+private:
     static bool IsPressed; static bool IsDoubleClicked;
     static bool RightClicked;
     static QPointF Click; static QPointF DClick;

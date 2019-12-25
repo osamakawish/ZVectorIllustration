@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Icons/mouseShapeIcon.png</file>
+        <file>Icons/mouseVectorIcon.png</file>
+        <file>Icons/penShapeIcon.png</file>
+        <file>Icons/penVectorIcon.png</file>
+        <file>Icons/textShapeIcon.png</file>
+        <file>Icons/textVectorIcon.png</file>
+        <file>Icons/zoomShapeIcon.png</file>
+        <file>Icons/zoomVectorIcon.png</file>
+    </qresource>
+</RCC>

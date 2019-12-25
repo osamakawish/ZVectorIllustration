@@ -18,7 +18,7 @@ public:
     GraphicsView(QWidget *parent = nullptr);
     GraphicsView(QGraphicsScene *scene, QWidget *parent = nullptr);
 
-
+    static QRectF rectangle(const QPointF &p1, const QPointF &p2);
 
     void mousePressEvent(QMouseEvent *e) override;
     void mouseDoubleClickEvent(QMouseEvent *e) override;

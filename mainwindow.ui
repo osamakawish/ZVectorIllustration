@@ -106,7 +106,10 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionShape_Mouse"/>
    <addaction name="actionShape_Pen"/>
+   <addaction name="actionShape_Text"/>
+   <addaction name="actionShape_Zoom"/>
   </widget>
   <widget class="QToolBar" name="vectorToolBar">
    <property name="windowTitle">
@@ -121,17 +124,31 @@
    <attribute name="toolBarBreak">
     <bool>true</bool>
    </attribute>
+   <addaction name="actionVector_Mouse"/>
    <addaction name="actionVector_Pen"/>
+   <addaction name="actionVector_Text"/>
+   <addaction name="actionVector_Zoom"/>
   </widget>
   <action name="actionShape_Pen">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/Icons/penShapeIcon.png</normaloff>:/Icons/penShapeIcon.png</iconset>
    </property>
    <property name="text">
     <string>Shape Pen</string>
    </property>
   </action>
   <action name="actionVector_Pen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/Icons/penVectorIcon.png</normaloff>:/Icons/penVectorIcon.png</iconset>
+   </property>
    <property name="text">
     <string>Vector Pen</string>
    </property>
@@ -186,6 +203,78 @@
     <string>F1</string>
    </property>
   </action>
+  <action name="actionShape_Mouse">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/Icons/mouseShapeIcon.png</normaloff>:/Icons/mouseShapeIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Shape Mouse</string>
+   </property>
+  </action>
+  <action name="actionVector_Mouse">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/Icons/mouseVectorIcon.png</normaloff>:/Icons/mouseVectorIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Vector Mouse</string>
+   </property>
+  </action>
+  <action name="actionShape_Zoom">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/Icons/zoomShapeIcon.png</normaloff>:/Icons/zoomShapeIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Shape Zoom</string>
+   </property>
+  </action>
+  <action name="actionVector_Zoom">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/Icons/zoomVectorIcon.png</normaloff>:/Icons/zoomVectorIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Vector Zoom</string>
+   </property>
+  </action>
+  <action name="actionShape_Text">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/Icons/textShapeIcon.png</normaloff>:/Icons/textShapeIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Shape Text</string>
+   </property>
+  </action>
+  <action name="actionVector_Text">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/Icons/textVectorIcon.png</normaloff>:/Icons/textVectorIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Vector Text</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -201,6 +290,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

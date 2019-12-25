@@ -6,11 +6,12 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , graphicsActionGroup(this) , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     prepareWindows();
     prepareMenuActions();
+    prepareGraphicsActions();
 }
 
 MainWindow::~MainWindow()
@@ -67,5 +68,14 @@ void MainWindow::prepareMenuActions()
     connect(ui->actionNew,&QAction::triggered,ui->fileWidget,&FileWidget::newFile,Qt::UniqueConnection);
     connect(ui->actionOpen_Import,&QAction::triggered,this,&MainWindow::openFileDialog);
     connect(ui->actionSave_Export,&QAction::triggered,this,&MainWindow::saveFileDialog);
+}
+
+void MainWindow::prepareGraphicsActions()
+{
+    ui->actionShape_Mouse->trigger();
+    graphicsActionGroup.addAction(ui->actionShape_Mouse); graphicsActionGroup.addAction(ui->actionShape_Pen);
+    graphicsActionGroup.addAction(ui->actionShape_Text); graphicsActionGroup.addAction(ui->actionShape_Zoom);
+    graphicsActionGroup.addAction(ui->actionVector_Mouse); graphicsActionGroup.addAction(ui->actionVector_Pen);
+    graphicsActionGroup.addAction(ui->actionVector_Text); graphicsActionGroup.addAction(ui->actionVector_Zoom);
 }
 
