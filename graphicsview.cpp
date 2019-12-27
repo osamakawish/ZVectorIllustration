@@ -1,16 +1,36 @@
 #include "graphicsview.h"
+
 #include "ActionMethods/mousebehaviour.h"
+#include "ActionMethods/mouseaction.h"
+#include "ActionMethods/penaction.h"
+#include "ActionMethods/textaction.h"
+#include "ActionMethods/zoomaction.h"
 
 #include <QMouseEvent>
+#include <limits>
+
+MouseEvent GraphicsView::Press = MouseAction::shapePress;
+MouseEvent GraphicsView::DoubleClick = MouseAction::shapeDoubleClick;
+MouseEvent GraphicsView::Move = MouseAction::shapeMove;
+MouseEvent GraphicsView::Release = MouseAction::shapeRelease;
 
 GraphicsView::GraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
-    setScene(new QGraphicsScene);
+    setScene(new QGraphicsScene); SelectionRect = RectItemPtr(scene()->addRect(QRectF()));
+    setSceneRect(QRectF(0,0,200,400)); setBackgroundBrush(Qt::Dense6Pattern);
+    SelectionRect->setZValue(std::numeric_limits<double>::max());
+    SheetRect = RectItemPtr(scene()->addRect(sceneRect(),QPen(),QBrush(Qt::white)));
+    SheetRect->setZValue(std::numeric_limits<double>::min());
+    setMouseTracking(true);
 }
 
 GraphicsView::GraphicsView(QGraphicsScene *scene, QWidget *parent) : QGraphicsView(scene,parent)
 {
-
+    SelectionRect = RectItemPtr(scene->addRect(QRectF())); setSceneRect(QRectF(0,0,200,400));
+    setBackgroundBrush(Qt::Dense6Pattern); SelectionRect->setZValue(std::numeric_limits<double>::max());
+    SheetRect = RectItemPtr(scene->addRect(sceneRect(),QPen(),QBrush(Qt::white)));
+    SheetRect->setZValue(std::numeric_limits<double>::min());
+    setMouseTracking(true);
 }
 
 QRectF GraphicsView::rectangle(const QPointF &p1, const QPointF &p2)
@@ -27,13 +47,13 @@ QRectF GraphicsView::rectangle(const QPointF &p1, const QPointF &p2)
 }
 
 void GraphicsView::mousePressEvent(QMouseEvent *e)
-{ MouseBehaviour::press(); press(e); }
+{ MouseBehaviour::press(); Press(e); }
 
 void GraphicsView::mouseDoubleClickEvent(QMouseEvent *e)
-{ MouseBehaviour::doubleClick(); doubleClick(e); }
+{ MouseBehaviour::doubleClick(); DoubleClick(e); }
 
 void GraphicsView::mouseMoveEvent(QMouseEvent *e)
-{ MouseBehaviour::moveTo(e->pos()); move(e); }
+{ MouseBehaviour::moveTo(e->globalPos()); Move(e); }
 
 void GraphicsView::mouseReleaseEvent(QMouseEvent *e)
-{ MouseBehaviour::release(); release(e); }
+{ MouseBehaviour::release(); Release(e); }

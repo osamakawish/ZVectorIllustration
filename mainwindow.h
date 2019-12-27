@@ -35,7 +35,10 @@ private:
 
     void prepareWindows();
     void prepareMenuActions();
-    void prepareGraphicsActions();
+    void prepareGraphicsActions(); void connectGraphicsActions();
+
+    void mouseShape(); void mouseVector(); void penShape(); void penVector();
+    void textShape(); void textVector(); void zoomShape(); void zoomVector();
 
     Ui::MainWindow *ui;
 };

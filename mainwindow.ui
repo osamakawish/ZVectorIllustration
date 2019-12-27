@@ -97,6 +97,9 @@
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QToolBar { border: 0; }</string>
+   </property>
    <property name="movable">
     <bool>false</bool>
    </property>
@@ -114,6 +117,9 @@
   <widget class="QToolBar" name="vectorToolBar">
    <property name="windowTitle">
     <string>toolBar_2</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QToolBar { border: 0; }</string>
    </property>
    <property name="movable">
     <bool>false</bool>

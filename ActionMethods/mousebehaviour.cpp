@@ -8,44 +8,49 @@
 bool MouseBehaviour::IsPressed = false;
 bool MouseBehaviour::IsDoubleClicked = false;
 bool MouseBehaviour::RightClicked = false;
+
 QPointF MouseBehaviour::Click = QPointF();
 QPointF MouseBehaviour::DClick = QPointF();
 QPointF MouseBehaviour::Move = QPointF();
 QPointF MouseBehaviour::DMove = QPointF();
 QPointF MouseBehaviour::Release = QPointF();
-std::unique_ptr<GraphicsView> MouseBehaviour::View = std::unique_ptr<GraphicsView>();
-std::unique_ptr<QGraphicsScene> MouseBehaviour::Scene = std::unique_ptr<QGraphicsScene>();
+
+GraphicsView *MouseBehaviour::View = nullptr;
+QGraphicsScene *MouseBehaviour::Scene = nullptr;
 
 void MouseBehaviour::setView(GraphicsView *v)
 {
 //    qDebug() << v;
     if (v == nullptr) return;
 
-    std::unique_ptr<GraphicsView> temp(v); View.swap(temp);
-    std::unique_ptr<QGraphicsScene> temp2(v->scene()); Scene.swap(temp2);
+    View = v;
+    Scene = v->scene();
     Move = scenePos();
 }
 
 GraphicsView *MouseBehaviour::view()
-{ return View.get(); }
+{ return View; }
 
 QGraphicsScene *MouseBehaviour::scene()
-{ return Scene.get(); }
+{ return Scene; }
 
 void MouseBehaviour::press()
-{ IsPressed = true; DClick = scenePos() - Click; Click = scenePos(); }
+{ IsPressed = true; DClick = scenePos() - Click; Click += DClick; }
 
 void MouseBehaviour::doubleClick()
-{ IsDoubleClicked = true; DClick = scenePos() - Click; Click = scenePos(); }
+{ IsDoubleClicked = true; qDebug() << 11 << Click; }
+
+QPointF MouseBehaviour::moved()
+{ return Move; }
 
 void MouseBehaviour::rightClick()
-{ RightClicked = true; DClick = scenePos() - Click; Click = scenePos(); }
+{ RightClicked = true; press(); }
 
-void MouseBehaviour::moveTo(QPointF pos)
-{ DClick = pos - Click; Click = pos; }
+void MouseBehaviour::moveTo(QPoint pos)
+{ DMove = pos - Move; Move = scenePos(pos); }
 
-void MouseBehaviour::move(QPointF dPos)
-{ DClick = dPos; Click += DClick; }
+void MouseBehaviour::move(QPoint dPos)
+{ DMove = dPos; Move += DMove; qDebug() << Move; }
 
 void MouseBehaviour::release()
 { IsPressed = false; IsDoubleClicked = false; RightClicked = false; Release = scenePos(); }
@@ -65,8 +70,11 @@ QPointF MouseBehaviour::lastClickedPos()
 QPointF MouseBehaviour::scenePos()
 { return View->mapToScene(View->mapFromGlobal(QCursor::pos())); }
 
+QPointF MouseBehaviour::scenePos(QPoint p)
+{ return View->mapToScene(View->mapFromGlobal(p)); }
+
 QPointF MouseBehaviour::scenePos(QMouseEvent *e)
-{ return View->mapToScene(View->mapFrom(View.get(),e->pos())); }
+{ return View->mapToScene(View->mapFrom(View,e->pos())); }
 
 //inline QPointF mapMousePosition(QMouseEvent *e)
 //{ return mapToScene(mapFrom(this,e->pos())); }
