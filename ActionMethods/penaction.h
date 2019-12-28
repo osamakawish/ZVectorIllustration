@@ -1,6 +1,9 @@
 #ifndef PENACTION_H
 #define PENACTION_H
 
+#include <QGraphicsItemGroup>
+#include <memory>
+
 class QMouseEvent;
 
 class PenAction

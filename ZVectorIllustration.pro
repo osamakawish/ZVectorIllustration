@@ -21,6 +21,8 @@ SOURCES += \
     ActionMethods/penaction.cpp \
     ActionMethods/textaction.cpp \
     ActionMethods/zoomaction.cpp \
+    Curves/curve.cpp \
+    Curves/node.cpp \
     SubWidgets/colorsetter.cpp \
     SubWidgets/radiobuttongrid.cpp \
     SubWidgets/valuesetter.cpp \
@@ -38,6 +40,8 @@ HEADERS += \
     ActionMethods/penaction.h \
     ActionMethods/textaction.h \
     ActionMethods/zoomaction.h \
+    Curves/curve.h \
+    Curves/node.h \
     SubWidgets/colorsetter.h \
     SubWidgets/radiobuttongrid.h \
     SubWidgets/valuesetter.h \
