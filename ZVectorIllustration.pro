@@ -23,6 +23,8 @@ SOURCES += \
     ActionMethods/zoomaction.cpp \
     Curves/curve.cpp \
     Curves/node.cpp \
+    Curves/pointf.cpp \
+    Curves/vector.cpp \
     SubWidgets/colorsetter.cpp \
     SubWidgets/radiobuttongrid.cpp \
     SubWidgets/valuesetter.cpp \
@@ -42,6 +44,8 @@ HEADERS += \
     ActionMethods/zoomaction.h \
     Curves/curve.h \
     Curves/node.h \
+    Curves/pointf.h \
+    Curves/vector.h \
     SubWidgets/colorsetter.h \
     SubWidgets/radiobuttongrid.h \
     SubWidgets/valuesetter.h \

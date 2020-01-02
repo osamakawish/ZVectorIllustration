@@ -23,6 +23,9 @@ class GraphicsView : public QGraphicsView
     RectItemPtr SelectionRect; ItemGroupPtr SelectionGroup;
     RectItemPtr SheetRect;
 
+    void initialize();
+    void test();
+
 public:
     GraphicsView(QWidget *parent = nullptr);
     GraphicsView(QGraphicsScene *scene, QWidget *parent = nullptr);

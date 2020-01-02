@@ -8,30 +8,50 @@
 
 #include <QMouseEvent>
 #include <limits>
+#include <QDebug>
+
+#include "Curves/curve.h"
 
 MouseEvent GraphicsView::Press = MouseAction::shapePress;
 MouseEvent GraphicsView::DoubleClick = MouseAction::shapeDoubleClick;
 MouseEvent GraphicsView::Move = MouseAction::shapeMove;
 MouseEvent GraphicsView::Release = MouseAction::shapeRelease;
 
-GraphicsView::GraphicsView(QWidget *parent) : QGraphicsView(parent)
+void GraphicsView::initialize()
 {
-    setScene(new QGraphicsScene); SelectionRect = RectItemPtr(scene()->addRect(QRectF()));
+    SelectionRect = RectItemPtr(scene()->addRect(QRectF()));
     setSceneRect(QRectF(0,0,200,400)); setBackgroundBrush(Qt::Dense6Pattern);
     SelectionRect->setZValue(std::numeric_limits<double>::max());
     SheetRect = RectItemPtr(scene()->addRect(sceneRect(),QPen(),QBrush(Qt::white)));
-    SheetRect->setZValue(std::numeric_limits<double>::min());
+    SheetRect->setZValue(-std::numeric_limits<double>::max());
     setMouseTracking(true);
+
+    test();
 }
 
-GraphicsView::GraphicsView(QGraphicsScene *scene, QWidget *parent) : QGraphicsView(scene,parent)
+void GraphicsView::test()
 {
-    SelectionRect = RectItemPtr(scene->addRect(QRectF())); setSceneRect(QRectF(0,0,200,400));
-    setBackgroundBrush(Qt::Dense6Pattern); SelectionRect->setZValue(std::numeric_limits<double>::max());
-    SheetRect = RectItemPtr(scene->addRect(sceneRect(),QPen(),QBrush(Qt::white)));
-    SheetRect->setZValue(std::numeric_limits<double>::min());
-    setMouseTracking(true);
+    QGraphicsEllipseItem *ellipse = scene()->addEllipse(0,0,100,200);
+    QGraphicsLineItem *line = scene()->addLine(20,20,300,100);
+    line->setParentItem(ellipse);
+
+    ellipse->setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable);
+    ellipse->setZValue(20);
+
+    qDebug() << ellipse << ellipse->boundingRect();
+
+    qDebug() << SheetRect->zValue() << SelectionRect->zValue();
+
+    Curve *c = new Curve(QPointF()); scene()->addItem(c);
+    Node *nd = c->add(QPointF(200,50)); nd->outVector(QPointF(20,50));
+    c->add(QPointF(100,80));
 }
+
+GraphicsView::GraphicsView(QWidget *parent) : QGraphicsView(parent)
+{ setScene(new QGraphicsScene); initialize(); }
+
+GraphicsView::GraphicsView(QGraphicsScene *scene, QWidget *parent) : QGraphicsView(scene,parent)
+{ initialize(); }
 
 QRectF GraphicsView::rectangle(const QPointF &p1, const QPointF &p2)
 {

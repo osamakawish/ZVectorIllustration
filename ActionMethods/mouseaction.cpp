@@ -39,12 +39,12 @@ void MouseAction::shapeDoubleClick(QMouseEvent */*e*/)
 void MouseAction::shapeMove(QMouseEvent *e)
 {
     if (!MouseBehaviour::isPressed()) {return;}
+    updateSelectionPath(MouseBehaviour::pos(),MouseBehaviour::moved());
     // If something is selected
     // .. if mouse is clicked outside selection, update selection rect.
     // .. if mouse click within selection, prepare to move
 
     // Otherwise, prepare selection rect.
-    updateSelectionPath(MouseBehaviour::pos(),MouseBehaviour::moved());
 }
 
 void MouseAction::shapeRelease(QMouseEvent *e)

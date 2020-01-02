@@ -3,38 +3,35 @@
 
 #include <QGraphicsItemGroup>
 #include <memory>
+#include <unordered_map>
+#include <utility>
 
-class Node;
+#include "node.h"
 
-class Arrow : public QAbstractGraphicsShapeItem {
-    Arrow(Node tail, QPointF head, Node *parent=nullptr);
+class Curve : public QAbstractGraphicsShapeItem {
+    std::unordered_map<Node *,std::pair<Node *, Node*>> Nodes;
+    Node *First; Node *Last; Node *Selected;
+    QPainterPath Path;
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-    QRectF boundingRect() const override;
-};
+    void drawSegment(Node *current, Node *next);
 
-class Curve;
-
-class Node : public QAbstractGraphicsShapeItem {
-    std::unique_ptr<QGraphicsEllipseItem> Shape;
-    std::unique_ptr<Arrow> InArrow;
-    std::unique_ptr<Arrow> OutArrow;
+    typedef std::pair<Node *, Node *> NodePair;
 
 public:
-    Node(QPointF p, Curve *parent=nullptr);
-
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-    QRectF boundingRect() const override;
-};
-
-class Curve : private QGraphicsItemGroup {
-
-public:
-    Curve(QGraphicsItem *parent=nullptr);
+    Curve(QPointF pt, QGraphicsItem *parent=nullptr);
+    ~Curve();
 
     //! Adds a control point to the last node.
-    Node &add(QPointF p);
-    void remove(Node &pt);
+    Node *add(QPointF p);
+    void remove(Node *pt);
+    void close();
+
+    void updatePath();
+
+    void paint(QPainter *p, const QStyleOptionGraphicsItem *, QWidget *) override;
+    QRectF boundingRect() const override;
+
+    friend class Node;
 };
 
 
