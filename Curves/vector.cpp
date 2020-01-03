@@ -2,6 +2,7 @@
 #include "curve.h"
 
 #include <QPainter>
+#include <QVector>
 
 void Vector::paintArrowHead(QPainter *p)
 {
@@ -16,9 +17,10 @@ void Vector::paintArrowHead(QPainter *p)
     QPointF p1 = Head; QPointF p3 = head1.p2();
     QPointF q2 = perp0.p2(); QPointF q4 = perp0.p1() - diff;
 
-    const QPointF points[4] = {p1, q2, p3, q4};
+    const QVector<QPointF> points = {p1, q2, p3, q4};
+    QPolygonF polygon(points);
 
-    p->drawPolygon(points,4);
+    p->drawPolygon(polygon);
 }
 
 Vector::Vector(QPointF head, Node *node, QGraphicsItem *parent) : QAbstractGraphicsShapeItem(parent)
@@ -40,7 +42,7 @@ void Vector::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
     QBrush brush = painter->brush(); painter->setBrush(QColor(196,0,0,200));
     QPen pen = painter->pen(); painter->setPen(Qt::black);
 
-    painter->drawLine(Tail,Head); paintArrowHead(painter);
+    painter->drawLine(QPointF(),Head); paintArrowHead(painter);
 
     painter->setBrush(brush); painter->setPen(pen);
 }
@@ -48,7 +50,8 @@ void Vector::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
 QRectF Vector::boundingRect() const
 {
     qreal edge = pen().width() / 2; QPointF e(edge,edge);
-    QRectF rect(GraphicsView::rectangle(Head,Tail));
+    QRectF rect0(GraphicsView::rectangle(Head,Tail));
+    QRectF rect1(rect0.topLeft()-2*e,rect0.bottomRight()+2*e); rect1.moveTopLeft(QPointF());
 
-    return QRectF(rect.topLeft()-2*e,rect.bottomRight()+2*e);
+    return rect1;
 }

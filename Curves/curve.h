@@ -18,7 +18,7 @@ class Curve : public QAbstractGraphicsShapeItem {
     typedef std::pair<Node *, Node *> NodePair;
 
 public:
-    Curve(QPointF pt, QGraphicsItem *parent=nullptr);
+    Curve(QPointF pt, QGraphicsScene *scene, QGraphicsItem *parent=nullptr);
     ~Curve();
 
     //! Adds a control point to the last node.
@@ -27,6 +27,10 @@ public:
     void close();
 
     void updatePath();
+
+    void hideNodes(); void showNodes();
+
+    void setParentItem(QGraphicsItem *item);
 
     void paint(QPainter *p, const QStyleOptionGraphicsItem *, QWidget *) override;
     QRectF boundingRect() const override;

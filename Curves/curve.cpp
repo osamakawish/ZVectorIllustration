@@ -3,6 +3,7 @@
 #include <iostream>
 #include <QDebug>
 #include <QPainter>
+#include <QGraphicsScene>
 
 //! Draws curve segments while accounting for null cases.
 //! Asserts current != 0 && next != 0.
@@ -11,27 +12,26 @@ void Curve::drawSegment(Node *current, Node *next)
     Vector *from = current->outVector(); Vector *to = next->inVector();
     QPointF c1, c2;
 
-    qDebug() << 0 << from << to;
-
     c1 = (from) ? (from->head()) : (current->point());
     c2 = (to) ? (to->head()) : (next->point());
 
     Path.cubicTo( c1, c2, next->point() );
 }
 
-Curve::Curve(QPointF pt, QGraphicsItem *parent) : QAbstractGraphicsShapeItem(parent)
+Curve::Curve(QPointF pt, QGraphicsScene *scene, QGraphicsItem *parent) : QAbstractGraphicsShapeItem(parent)
 {
-    First = new Node(pt,this,parentItem()); Last = First; Selected = First;
-    Nodes.insert( std::pair<Node *,NodePair>(First,NodePair(nullptr,nullptr)) );
+    First = new Node(pt,this,parentItem()); Last = First; Selected = First; scene->addItem(this); scene->addItem(First);
+    Nodes.insert( std::pair<Node *,NodePair>(First,NodePair(nullptr,nullptr)) ); qDebug() << scene;
 }
 
 Curve::~Curve()
 { delete First; delete Last; delete Selected; }
 
 // Note: Must make sure that each Curve is a series of nodes (no node has more than one prev/next node).
+// Better to allow tail nodes (First and Last) to be selectable but not others.
 Node *Curve::add(QPointF p)
 {
-    Node *nd = new Node(p,this,parentItem());
+    Node *nd = new Node(p,this,parentItem()); scene()->addItem(nd); qDebug() << scene();
     Nodes.insert( std::pair<Node *,NodePair>(nd,NodePair(Selected,nullptr)) );
     Nodes.at(Selected).second = nd;
 
@@ -54,17 +54,26 @@ void Curve::remove(Node *nd)
 
 void Curve::updatePath()
 {
-    Node *current; current=First; qDebug() << 2 << current;
+    Node *current; current=First;
     Path = QPainterPath(current->point());
     Node *next = Nodes.at(current).second;
 
-    qDebug() << 3 << current << Last << next;
-//    std::cout << Nodes;
     while ((current != Last) && next) {
         drawSegment(current,next);
         current = next; next = Nodes.at(current).second;
-        qDebug() << 4 << current << next;
     }
+}
+
+void Curve::hideNodes()
+{ auto it = Nodes.begin(); while (it != Nodes.end()) { it->first->hide(); it++; } }
+
+void Curve::showNodes()
+{ auto it = Nodes.begin(); while (it != Nodes.end()) { it->first->show(); qDebug() << it->first; it++; } }
+
+void Curve::setParentItem(QGraphicsItem *parent)
+{
+    QAbstractGraphicsShapeItem::setParentItem(parent);
+    auto it = Nodes.begin(); while (it != Nodes.end()) { it->first->setParentItem(parent); it++; }
 }
 
 void Curve::paint(QPainter *p, const QStyleOptionGraphicsItem *, QWidget *)

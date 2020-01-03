@@ -38,13 +38,13 @@ void GraphicsView::test()
     ellipse->setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable);
     ellipse->setZValue(20);
 
-    qDebug() << ellipse << ellipse->boundingRect();
+//    Vector *v = new Vector(QPointF(),QPointF(20,20)); scene()->addItem(v);
 
-    qDebug() << SheetRect->zValue() << SelectionRect->zValue();
 
-    Curve *c = new Curve(QPointF()); scene()->addItem(c);
+    Curve *c = new Curve(QPointF(),scene());
     Node *nd = c->add(QPointF(200,50)); nd->outVector(QPointF(20,50));
     c->add(QPointF(100,80));
+    c->showNodes();
 }
 
 GraphicsView::GraphicsView(QWidget *parent) : QGraphicsView(parent)

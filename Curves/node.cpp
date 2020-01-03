@@ -7,7 +7,7 @@ const qreal Node::nodeRadius = 6;
 
 Node::Node(QPointF p, class Curve *curve, QGraphicsItem *parent) :  QAbstractGraphicsShapeItem(parent),
     Point(p), Curve(curve), In(new Vector(this->point(),this)), Out(new Vector(this->point(),this))
-{}
+{setPos(p);}
 
 Node::~Node()
 { delete In; delete Out; delete Curve; }
@@ -34,7 +34,6 @@ Vector *Node::inVector(QPointF head)
 
 Vector *Node::outVector(QPointF head)
 {
-
     if (Out) delete Out;
     Out = new Vector(head,this,parentItem());
     return Out;
@@ -50,4 +49,5 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 { painter->drawEllipse(-nodeRadius,-nodeRadius,2*nodeRadius,2*nodeRadius); }
 
 QRectF Node::boundingRect() const
-{ return QRectF(-nodeRadius,-nodeRadius,2*nodeRadius,2*nodeRadius); }
+{ return QRectF(-nodeRadius-pen().widthF(),-nodeRadius-pen().widthF(),
+                2*nodeRadius+pen().widthF(),2*nodeRadius+pen().widthF()); }

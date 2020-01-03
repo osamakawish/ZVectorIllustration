@@ -11,7 +11,7 @@ class Vector : public QAbstractGraphicsShapeItem {
 
 public:
     Vector(QPointF Head, Node *node=nullptr, QGraphicsItem *parent=nullptr);
-    Vector(QPointF Head, QPointF Tail, QGraphicsItem *parent=nullptr);
+    Vector(QPointF Tail, QPointF Head, QGraphicsItem *parent=nullptr);
 
     QPointF head(); QPointF tail();
 
