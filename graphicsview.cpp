@@ -38,8 +38,8 @@ void GraphicsView::test()
     ellipse->setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable);
     ellipse->setZValue(20);
 
-//    Vector *v = new Vector(QPointF(),QPointF(20,20)); scene()->addItem(v);
-
+    Vector *v = new Vector(QPointF(30,100),QPointF(-50,80)); scene()->addItem(v);
+    scene()->addEllipse((30)-6,(100)-6,12,12); scene()->addEllipse((-50)-6,(80)-6,12,12);
 
     Curve *c = new Curve(QPointF(),scene());
     Node *nd = c->add(QPointF(200,50)); nd->outVector(QPointF(20,50));

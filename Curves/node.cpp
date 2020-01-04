@@ -6,7 +6,7 @@ const qreal Node::nodeRadius = 6;
 
 
 Node::Node(QPointF p, class Curve *curve, QGraphicsItem *parent) :  QAbstractGraphicsShapeItem(parent),
-    Point(p), Curve(curve), In(new Vector(this->point(),this)), Out(new Vector(this->point(),this))
+    Point(p), Curve(curve), In(new Vector(this,this->point())), Out(new Vector(this,this->point()))
 {setPos(p);}
 
 Node::~Node()
@@ -28,14 +28,14 @@ Vector *Node::outVector()
 Vector *Node::inVector(QPointF head)
 {
     if (In) delete In;
-    In = new Vector(head,this,parentItem());
+    In = new Vector(this,head,parentItem());
     return In;
 }
 
 Vector *Node::outVector(QPointF head)
 {
     if (Out) delete Out;
-    Out = new Vector(head,this,parentItem());
+    Out = new Vector(this,head,parentItem());
     return Out;
 }
 

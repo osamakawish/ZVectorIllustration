@@ -3,33 +3,18 @@
 
 #include <QPainter>
 #include <QVector>
+#include <QDebug>
 
 void Vector::paintArrowHead(QPainter *p)
-{
-    double arrowSize = 16; double headWidth = 4; double headLength = 14;
+{ p->drawPolygon(arrowHead()); }
 
-    QLineF head0 = QLineF(Head, Tail); head0.setLength(arrowSize);
-    QLineF line = QLineF(head0.p2(),head0.p1());
-    QLineF head1 = QLineF(head0); head1.setLength(headLength);
-    QLineF perp0 = line.normalVector(); perp0.setLength(headWidth);
-    QPointF diff = perp0.p2() - perp0.p1();
+Vector::Vector(Node *node, QPointF head, QGraphicsItem *parent) : QAbstractGraphicsShapeItem(parent)
+  , Tail(node->point()), Head(head)
+{setPos(Tail);}
 
-    QPointF p1 = Head; QPointF p3 = head1.p2();
-    QPointF q2 = perp0.p2(); QPointF q4 = perp0.p1() - diff;
-
-    const QVector<QPointF> points = {p1, q2, p3, q4};
-    QPolygonF polygon(points);
-
-    p->drawPolygon(polygon);
-}
-
-Vector::Vector(QPointF head, Node *node, QGraphicsItem *parent) : QAbstractGraphicsShapeItem(parent)
-  , Head(head) , Tail(node->point())
-{}
-
-Vector::Vector(QPointF head, QPointF tail, QGraphicsItem *parent) : QAbstractGraphicsShapeItem(parent) ,
-    Head(head), Tail(tail)
-{}
+Vector::Vector(QPointF tail, QPointF head, QGraphicsItem *parent) : QAbstractGraphicsShapeItem(parent)
+  , Tail(tail), Head(head)
+{setPos(Tail);}
 
 QPointF Vector::head()
 { return Head; }
@@ -37,12 +22,27 @@ QPointF Vector::head()
 QPointF Vector::tail()
 { return Tail; }
 
+QPolygonF Vector::arrowHead()
+{
+    QLineF head0 = QLineF(Head, Tail); head0.setLength(ArrowSize);
+    QLineF line = QLineF(head0.p2(),head0.p1());
+    QLineF head1 = QLineF(head0); head1.setLength(HeadLength);
+    QLineF perp0 = line.normalVector(); perp0.setLength(HeadWidth);
+    QPointF diff = perp0.p2() - perp0.p1();
+
+    QPointF p1 = Head - Tail; QPointF p3 = head1.p2() - Tail; P3 = p3;
+    QPointF q2 = perp0.p2() - Tail; QPointF q4 = perp0.p1() - diff - Tail;
+
+    return QVector<QPointF> {p1, q2, p3, q4};;
+}
+
 void Vector::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    QBrush brush = painter->brush(); painter->setBrush(QColor(196,0,0,200));
+    QBrush brush = painter->brush(); painter->setBrush(QColor(0,0,196,128));
     QPen pen = painter->pen(); painter->setPen(Qt::black);
 
-    painter->drawLine(QPointF(),Head); paintArrowHead(painter);
+    paintArrowHead(painter);
+    painter->drawLine(QPointF(),P3);
 
     painter->setBrush(brush); painter->setPen(pen);
 }

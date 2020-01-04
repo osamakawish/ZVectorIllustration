@@ -21,7 +21,7 @@ void Curve::drawSegment(Node *current, Node *next)
 Curve::Curve(QPointF pt, QGraphicsScene *scene, QGraphicsItem *parent) : QAbstractGraphicsShapeItem(parent)
 {
     First = new Node(pt,this,parentItem()); Last = First; Selected = First; scene->addItem(this); scene->addItem(First);
-    Nodes.insert( std::pair<Node *,NodePair>(First,NodePair(nullptr,nullptr)) ); qDebug() << scene;
+    Nodes.insert( std::pair<Node *,NodePair>(First,NodePair(nullptr,nullptr)) );
 }
 
 Curve::~Curve()
@@ -35,7 +35,6 @@ Node *Curve::add(QPointF p)
     Nodes.insert( std::pair<Node *,NodePair>(nd,NodePair(Selected,nullptr)) );
     Nodes.at(Selected).second = nd;
 
-    qDebug() << 1 << Nodes.at(Selected);
     Last = nd; Selected = nd;
 
     updatePath();
@@ -68,7 +67,7 @@ void Curve::hideNodes()
 { auto it = Nodes.begin(); while (it != Nodes.end()) { it->first->hide(); it++; } }
 
 void Curve::showNodes()
-{ auto it = Nodes.begin(); while (it != Nodes.end()) { it->first->show(); qDebug() << it->first; it++; } }
+{ auto it = Nodes.begin(); while (it != Nodes.end()) { it->first->show(); it++; } }
 
 void Curve::setParentItem(QGraphicsItem *parent)
 {

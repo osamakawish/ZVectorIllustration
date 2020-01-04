@@ -6,14 +6,16 @@
 class Node;
 
 class Vector : public QAbstractGraphicsShapeItem {
-    QPointF Head, Tail;
+    QPointF Tail, Head; QPointF P3;
+    double ArrowSize = 16; double HeadWidth = 4; double HeadLength = 14;
     void paintArrowHead(QPainter *p);
 
 public:
-    Vector(QPointF Head, Node *node=nullptr, QGraphicsItem *parent=nullptr);
+    Vector(Node *node, QPointF Head, QGraphicsItem *parent=nullptr);
     Vector(QPointF Tail, QPointF Head, QGraphicsItem *parent=nullptr);
 
     QPointF head(); QPointF tail();
+    QPolygonF arrowHead();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     QRectF boundingRect() const override;
