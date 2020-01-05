@@ -6,23 +6,9 @@
 #include <QDebug>
 
 void Vector::paintArrowHead(QPainter *p)
-{ p->drawPolygon(arrowHead()); }
+{ p->drawPolygon(ArrowHead); }
 
-Vector::Vector(Node *node, QPointF head, QGraphicsItem *parent) : QAbstractGraphicsShapeItem(parent)
-  , Tail(node->point()), Head(head)
-{setPos(Tail);}
-
-Vector::Vector(QPointF tail, QPointF head, QGraphicsItem *parent) : QAbstractGraphicsShapeItem(parent)
-  , Tail(tail), Head(head)
-{setPos(Tail);}
-
-QPointF Vector::head()
-{ return Head; }
-
-QPointF Vector::tail()
-{ return Tail; }
-
-QPolygonF Vector::arrowHead()
+void Vector::updateArrow()
 {
     QLineF head0 = QLineF(Head, Tail); head0.setLength(ArrowSize);
     QLineF line = QLineF(head0.p2(),head0.p1());
@@ -33,8 +19,42 @@ QPolygonF Vector::arrowHead()
     QPointF p1 = Head - Tail; QPointF p3 = head1.p2() - Tail; P3 = p3;
     QPointF q2 = perp0.p2() - Tail; QPointF q4 = perp0.p1() - diff - Tail;
 
-    return QVector<QPointF> {p1, q2, p3, q4};;
+    ArrowHead = QVector<QPointF> {p1, q2, p3, q4}; qreal d = pen().widthF()/2;
+    update();
 }
+
+Vector::Vector(Node *node, QPointF head, QGraphicsItem *parent) : QAbstractGraphicsShapeItem(parent)
+  , Tail(node->point()), Head(head)
+{setPos(Tail); updateArrow();}
+
+Vector::Vector(QPointF tail, QPointF head, QGraphicsItem *parent) : QAbstractGraphicsShapeItem(parent)
+  , Tail(tail), Head(head)
+{setPos(Tail); updateArrow();}
+
+void Vector::head(QPointF head)
+{ Head = head; updateArrow(); }
+
+void Vector::tail(QPointF tail)
+{ setPos(tail); }
+
+void Vector::moveTailWithFixedHead(QPointF newTail)
+{
+    QPointF diff = newTail - Tail;
+    setPos(newTail); Head = Head - diff;
+    updateArrow();
+}
+
+QPointF Vector::head()
+{ return Head; }
+
+QPointF Vector::tail()
+{ return Tail; }
+
+QPolygonF Vector::arrowHead()
+{ return ArrowHead; }
+
+bool Vector::arrowHeadContains(QPointF pt)
+{ return ArrowHead.containsPoint(pt,Qt::FillRule::WindingFill); }
 
 void Vector::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
@@ -49,9 +69,9 @@ void Vector::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
 
 QRectF Vector::boundingRect() const
 {
-    qreal edge = pen().width() / 2; QPointF e(edge,edge);
+    qreal edge = pen().width() / 2; QPointF diff(edge,edge);
     QRectF rect0(GraphicsView::rectangle(Head,Tail));
-    QRectF rect1(rect0.topLeft()-2*e,rect0.bottomRight()+2*e); rect1.moveTopLeft(QPointF());
+    QRectF rect1(rect0.topLeft()-2*diff,rect0.bottomRight()+2*diff); rect1.moveTopLeft(QPointF());
 
     return rect1;
 }

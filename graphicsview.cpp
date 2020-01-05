@@ -40,6 +40,8 @@ void GraphicsView::test()
 
     Vector *v = new Vector(QPointF(30,100),QPointF(-50,80)); scene()->addItem(v);
     scene()->addEllipse((30)-6,(100)-6,12,12); scene()->addEllipse((-50)-6,(80)-6,12,12);
+    Vector *w = new Vector(QPointF(30,100),QPointF(-50,80)); scene()->addItem(w);
+    w->moveTailWithFixedHead(QPointF(80,100));
 
     Curve *c = new Curve(QPointF(),scene());
     Node *nd = c->add(QPointF(200,50)); nd->outVector(QPointF(20,50));
