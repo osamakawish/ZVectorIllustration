@@ -69,6 +69,26 @@ void Curve::hideNodes()
 void Curve::showNodes()
 { auto it = Nodes.begin(); while (it != Nodes.end()) { it->first->show(); it++; } }
 
+void Curve::hideVectors()
+{
+
+}
+
+void Curve::showVectors()
+{
+
+}
+
+void Curve::hideVectorsAndNodes()
+{
+
+}
+
+void Curve::showVectorsAndNodes()
+{
+
+}
+
 void Curve::setParentItem(QGraphicsItem *parent)
 {
     QAbstractGraphicsShapeItem::setParentItem(parent);

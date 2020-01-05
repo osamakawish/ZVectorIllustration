@@ -21,23 +21,11 @@ Vector *Node::inVector()
 Vector *Node::outVector()
 { return Out; }
 
-/*  Note: For the inVector and outVector setters, change the vectors themselves.
- *  The current code is for testing purposes.
- */
-//! head: The arrow head.
-Vector *Node::inVector(QPointF head)
-{
-    if (In) delete In;
-    In = new Vector(this,head,parentItem());
-    return In;
-}
+void Node::inVector(QPointF head)
+{ In->head(head); }
 
-Vector *Node::outVector(QPointF head)
-{
-    if (Out) delete Out;
-    Out = new Vector(this,head,parentItem());
-    return Out;
-}
+void Node::outVector(QPointF head)
+{ Out->head(head); }
 
 Node *Node::previousNode()
 { return Curve->Nodes.at(this).first; }

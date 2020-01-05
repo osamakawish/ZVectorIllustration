@@ -15,7 +15,6 @@ public:
     Vector(QPointF Tail, QPointF Head, QGraphicsItem *parent=nullptr);
 
     void head(QPointF head); void tail(QPointF tail);
-    void moveTailWithFixedHead(QPointF newTail);
     QPointF head(); QPointF tail();
     QPolygonF arrowHead(); bool arrowHeadContains(QPointF pt);
 

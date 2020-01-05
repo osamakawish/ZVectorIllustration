@@ -18,7 +18,7 @@ public:
     QPointF point();
 
     Vector *inVector(); Vector *outVector();
-    Vector *inVector(QPointF tail); Vector *outVector(QPointF head);
+    void inVector(QPointF tail); void outVector(QPointF head);
 
     Node *previousNode();
     Node *nextNode();

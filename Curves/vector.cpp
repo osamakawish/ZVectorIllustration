@@ -34,13 +34,11 @@ Vector::Vector(QPointF tail, QPointF head, QGraphicsItem *parent) : QAbstractGra
 void Vector::head(QPointF head)
 { Head = head; updateArrow(); }
 
+//! Moves tail without moving head. Use setPos to move the entire arrow.
 void Vector::tail(QPointF tail)
-{ setPos(tail); }
-
-void Vector::moveTailWithFixedHead(QPointF newTail)
 {
-    QPointF diff = newTail - Tail;
-    setPos(newTail); Head = Head - diff;
+    QPointF diff = tail - Tail;
+    setPos(tail); Head = Head - diff;
     updateArrow();
 }
 

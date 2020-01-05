@@ -29,6 +29,8 @@ public:
     void updatePath();
 
     void hideNodes(); void showNodes();
+    void hideVectors(); void showVectors();
+    void hideVectorsAndNodes(); void showVectorsAndNodes();
 
     void setParentItem(QGraphicsItem *item);
 
