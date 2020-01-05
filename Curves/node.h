@@ -18,6 +18,7 @@ public:
     class Curve *copy();
     QPointF point();
 
+    void setScene(QGraphicsScene *scene);
     void move(QPointF pt); void hide();
     void hideVectors(); void showVectors();
     Vector *inVector(); Vector *outVector();

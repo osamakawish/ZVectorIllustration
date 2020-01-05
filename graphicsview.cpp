@@ -46,9 +46,10 @@ void GraphicsView::test()
     u->setPos(QPointF(120,190));
 
     Curve *c = new Curve(QPointF(),scene());
-    Node *nd = c->add(QPointF(200,50)); nd->outVector(QPointF(20,50));
+    Node *nd = c->add(QPointF(200,50)); nd->outVector()->scene();
+    nd->outVector(QPointF(20,50));
     c->add(QPointF(100,80));
-    c->showNodes();
+    c->showNodes(); c->showVectors();
 }
 
 GraphicsView::GraphicsView(QWidget *parent) : QGraphicsView(parent)

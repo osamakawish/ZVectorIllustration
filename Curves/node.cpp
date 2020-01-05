@@ -1,13 +1,15 @@
 #include "curve.h"
 
+#include <QDebug>
 #include <QPainter>
+#include <QGraphicsScene>
 
 const qreal Node::nodeRadius = 6;
 
 
 Node::Node(QPointF p, class Curve *curve, QGraphicsItem *parent) :  QAbstractGraphicsShapeItem(parent),
-    Point(p), Curve(curve), In(new Vector(this,this->point())), Out(new Vector(this,this->point()))
-{setPos(p);}
+    Point(p), Curve(curve), In(new Vector(this,this->point(),parentItem())), Out(new Vector(this,this->point(),parentItem()))
+{setPos(p); QGraphicsScene *scene = curve->scene(); scene->addItem(this); scene->addItem(In); scene->addItem(Out); }
 
 Node::~Node()
 { delete In; delete Out; delete Curve; }
@@ -19,6 +21,9 @@ class Curve *Node::copy()
 
 QPointF Node::point()
 { return Point; }
+
+void Node::setScene(QGraphicsScene *scene)
+{ scene->addItem(this); scene->addItem(In); scene->addItem(Out); qDebug() << In->scene() << Out->scene(); }
 
 void Node::move(QPointF pt)
 { setPos(pt); In->setPos(pt); Out->setPos(pt); }
@@ -42,7 +47,7 @@ void Node::inVector(QPointF head)
 { In->head(head); }
 
 void Node::outVector(QPointF head)
-{ Out->head(head); }
+{ Out->head(head); qDebug() << Out->tail() << Out->head() << Out->pos() << Out->scene(); }
 
 Node *Node::previousNode()
 { return Curve->Nodes.at(this).first; }
