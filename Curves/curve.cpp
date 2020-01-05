@@ -51,6 +51,12 @@ void Curve::remove(Node *nd)
     updatePath();
 }
 
+Node *Curve::first()
+{ return First; }
+
+Node *Curve::last()
+{ return Last; }
+
 void Curve::updatePath()
 {
     Node *current; current=First;

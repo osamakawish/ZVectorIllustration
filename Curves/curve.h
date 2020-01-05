@@ -26,6 +26,9 @@ public:
     void remove(Node *pt);
     void close();
 
+    Node *first();
+    Node *last();
+
     void updatePath();
 
     void hideNodes(); void showNodes();

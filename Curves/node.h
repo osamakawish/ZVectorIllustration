@@ -12,11 +12,14 @@ class Node : public QAbstractGraphicsShapeItem {
     QPointF Point; Curve *Curve; Vector *In, *Out;
 
 public:
-    Node(QPointF p, class Curve *curve, QGraphicsItem *parent=nullptr);
+    Node(QPointF p, class Curve *curve=nullptr, QGraphicsItem *parent=nullptr);
     ~Node();
 
+    class Curve *copy();
     QPointF point();
 
+    void move(QPointF pt); void hide();
+    void hideVectors(); void showVectors();
     Vector *inVector(); Vector *outVector();
     void inVector(QPointF tail); void outVector(QPointF head);
 
