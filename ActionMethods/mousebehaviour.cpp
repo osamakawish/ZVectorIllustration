@@ -5,22 +5,18 @@
 #include <QMouseEvent>
 #include "graphicsview.h"
 
-bool MouseBehaviour::IsPressed = false;
-bool MouseBehaviour::IsDoubleClicked = false;
-bool MouseBehaviour::RightClicked = false;
-
-QPointF MouseBehaviour::Click = QPointF();
-QPointF MouseBehaviour::DClick = QPointF();
-QPointF MouseBehaviour::Move = QPointF();
-QPointF MouseBehaviour::DMove = QPointF();
-QPointF MouseBehaviour::Release = QPointF();
-
-GraphicsView *MouseBehaviour::View = nullptr;
-QGraphicsScene *MouseBehaviour::Scene = nullptr;
+namespace {
+    bool IsPressed=false; bool IsDoubleClicked=false;
+    bool RightClicked=false;
+    QPointF Click=QPointF(); QPointF DClick=QPointF();
+    QPointF Move=QPointF(); QPointF DMove=QPointF();
+    QPointF Release=QPointF(); QPointF DRelease=QPointF();
+    GraphicsView *View=nullptr;
+    QGraphicsScene *Scene=nullptr;
+}
 
 void MouseBehaviour::setView(GraphicsView *v)
 {
-//    qDebug() << v;
     if (v == nullptr) return;
 
     View = v;
@@ -38,7 +34,7 @@ void MouseBehaviour::press()
 { IsPressed = true; DClick = scenePos() - Click; Click += DClick; }
 
 void MouseBehaviour::doubleClick()
-{ IsDoubleClicked = true; qDebug() << 11 << Click; }
+{ IsDoubleClicked = true; }
 
 QPointF MouseBehaviour::moved()
 { return Move; }
@@ -50,10 +46,11 @@ void MouseBehaviour::moveTo(QPoint pos)
 { DMove = pos - Move; Move = scenePos(pos); }
 
 void MouseBehaviour::move(QPoint dPos)
-{ DMove = dPos; Move += DMove; qDebug() << Move; }
+{ DMove = dPos; Move += DMove; }
 
 void MouseBehaviour::release()
-{ IsPressed = false; IsDoubleClicked = false; RightClicked = false; Release = scenePos(); }
+{ IsPressed = false; IsDoubleClicked = false; RightClicked = false;
+DRelease = scenePos() - Release; Release = Release + DRelease; }
 
 bool MouseBehaviour::isPressed()
 { return IsPressed; }
@@ -66,6 +63,9 @@ QPointF MouseBehaviour::pos()
 
 QPointF MouseBehaviour::lastClickedPos()
 { return Click - DClick; }
+
+QPointF MouseBehaviour::previousReleasedPos()
+{ return Release - DRelease; }
 
 QPointF MouseBehaviour::scenePos()
 { return View->mapToScene(View->mapFromGlobal(QCursor::pos())); }

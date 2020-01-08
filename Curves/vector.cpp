@@ -10,6 +10,9 @@ void Vector::paintArrowHead(QPainter *p)
 
 void Vector::updateArrow()
 {
+    prepareGeometryChange();
+    QRectF before = boundingRect();
+
     QLineF head0 = QLineF(Head, Tail); head0.setLength(ArrowSize);
     QLineF line = QLineF(head0.p2(),head0.p1());
     QLineF head1 = QLineF(head0); head1.setLength(HeadLength);
@@ -19,8 +22,10 @@ void Vector::updateArrow()
     QPointF p1 = Head - Tail; QPointF p3 = head1.p2() - Tail; P3 = p3;
     QPointF q2 = perp0.p2() - Tail; QPointF q4 = perp0.p1() - diff - Tail;
 
-    ArrowHead = QVector<QPointF> {p1, q2, p3, q4}; qreal d = pen().widthF()/2;
-    update();
+    ArrowHead = QVector<QPointF> {p1, q2, p3, q4};
+
+    QRectF after = boundingRect();
+    update(before | after);
 }
 
 Vector::Vector(Node *node, QPointF head, QGraphicsItem *parent) : QAbstractGraphicsShapeItem(parent)
@@ -67,9 +72,6 @@ void Vector::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
 
 QRectF Vector::boundingRect() const
 {
-    qreal edge = pen().width() / 2; QPointF diff(edge,edge);
-    QRectF rect0(GraphicsView::rectangle(Head,Tail));
-    QRectF rect1(rect0.topLeft()-2*diff,rect0.bottomRight()+2*diff); rect1.moveTopLeft(QPointF());
 
-    return rect1;
+    return GraphicsView::rectangle(Head-Tail,QPointF());
 }

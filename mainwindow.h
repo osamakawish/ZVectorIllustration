@@ -37,9 +37,6 @@ private:
     void prepareMenuActions();
     void prepareGraphicsActions(); void connectGraphicsActions();
 
-    void mouseShape(); void mouseVector(); void penShape(); void penVector();
-    void textShape(); void textVector(); void zoomShape(); void zoomVector();
-
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

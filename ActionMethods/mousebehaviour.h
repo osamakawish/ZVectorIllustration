@@ -3,35 +3,29 @@
 
 #include <memory>
 
+// Should change these to namespaces eventually.
+
 class QWidget; class QGraphicsScene;
 class GraphicsView; class QPoint; class QPointF; class QMouseEvent;
 
-//inline QPointF mapPositionToGlobal(QPointF pos)
-//{ return mapToGlobal(mapFromScene(pos)); }
+#include <QPointF>
 
-class MouseBehaviour
+namespace MouseBehaviour
 {
-private:
-    static bool IsPressed; static bool IsDoubleClicked;
-    static bool RightClicked;
-    static QPointF Click; static QPointF DClick;
-    static QPointF Move; static QPointF DMove;
-    static QPointF Release;
-    static GraphicsView *View;
-    static QGraphicsScene *Scene;
+    void setView(GraphicsView *view);
+    GraphicsView *view(); QGraphicsScene *scene();
 
-public:
-    static void setView(GraphicsView *view);
-    static GraphicsView *view(); static QGraphicsScene *scene();
+    void press(); void doubleClick(); QPointF moved();
+    void rightClick(); void moveTo(QPoint pos);
+    void move(QPoint dPos); void release();
 
-    static void press(); static void doubleClick(); static QPointF moved();
-    static void rightClick(); static void moveTo(QPoint pos);
-    static void move(QPoint dPos); static void release();
+    bool isPressed(); bool isDoubleClicked();
+    QPointF pos();
+    QPointF lastClickedPos(); QPointF previousReleasedPos();
+    QPointF scenePos(); QPointF scenePos(QPoint p);
+    QPointF scenePos(QMouseEvent *e);
 
-    static bool isPressed(); static bool isDoubleClicked();
-    static QPointF pos(); static QPointF lastClickedPos();
-    static QPointF scenePos(); static QPointF scenePos(QPoint p);
-    static QPointF scenePos(QMouseEvent *e);
+    void setClickEvent();
 };
 
 #endif // MOUSEBEHAVIOUR_H

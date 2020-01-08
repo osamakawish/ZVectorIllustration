@@ -19,6 +19,8 @@ MouseEvent GraphicsView::Release = MouseAction::shapeRelease;
 
 void GraphicsView::initialize()
 {
+    setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
+
     SelectionRect = RectItemPtr(scene()->addRect(QRectF()));
     setSceneRect(QRectF(0,0,200,400)); setBackgroundBrush(Qt::Dense6Pattern);
     SelectionRect->setZValue(std::numeric_limits<double>::max());
@@ -38,6 +40,7 @@ void GraphicsView::test()
     ellipse->setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable);
     ellipse->setZValue(20);
 
+    // Vector Test
     Vector *v = new Vector(QPointF(30,100),QPointF(-50,80)); scene()->addItem(v);
     scene()->addEllipse((30)-6,(100)-6,12,12); scene()->addEllipse((-50)-6,(80)-6,12,12);
     Vector *w = new Vector(QPointF(30,100),QPointF(-50,80)); scene()->addItem(w);
@@ -45,6 +48,7 @@ void GraphicsView::test()
     Vector *u = new Vector(QPointF(30,100),QPointF(-50,80)); scene()->addItem(u);
     u->setPos(QPointF(120,190));
 
+    // Curve and Node Test
     Curve *c = new Curve(QPointF(),scene());
     Node *nd = c->add(QPointF(200,50)); nd->outVector()->scene();
     nd->outVector(QPointF(20,50));

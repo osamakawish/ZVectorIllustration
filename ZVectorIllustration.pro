@@ -22,6 +22,7 @@ SOURCES += \
     ActionMethods/textaction.cpp \
     ActionMethods/zoomaction.cpp \
     Curves/curve.cpp \
+    Curves/graphicsitem.cpp \
     Curves/node.cpp \
     Curves/vector.cpp \
     SubWidgets/colorsetter.cpp \
@@ -42,6 +43,7 @@ HEADERS += \
     ActionMethods/textaction.h \
     ActionMethods/zoomaction.h \
     Curves/curve.h \
+    Curves/graphicsitem.h \
     Curves/node.h \
     Curves/vector.h \
     SubWidgets/colorsetter.h \

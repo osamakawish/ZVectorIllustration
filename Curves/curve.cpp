@@ -60,8 +60,11 @@ Node *Curve::first() { return First; }
 
 Node *Curve::last() { return Last; }
 
+Node *Curve::selected() { return Selected; }
+
 void Curve::updatePath()
 {
+    prepareGeometryChange();
     Node *current; current=First;
     Path = QPainterPath(current->point());
     Node *next = Nodes.at(current).second;

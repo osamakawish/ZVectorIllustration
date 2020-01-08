@@ -33,10 +33,10 @@ void MouseAction::shapePress(QMouseEvent *e)
     }
 }
 
-void MouseAction::shapeDoubleClick(QMouseEvent */*e*/)
+void MouseAction::shapeDoubleClick(QMouseEvent *)
 {}
 
-void MouseAction::shapeMove(QMouseEvent *e)
+void MouseAction::shapeMove(QMouseEvent *)
 {
     if (!MouseBehaviour::isPressed()) {return;}
     updateSelectionPath(MouseBehaviour::pos(),MouseBehaviour::moved());
@@ -65,6 +65,19 @@ void MouseAction::shapeRelease(QMouseEvent *e)
     }
 }
 
+void MouseAction::shapeToggle(bool toggle)
+{
+    if (toggle) {
+        GraphicsView::Press = &MouseAction::shapePress;
+        GraphicsView::DoubleClick = &MouseAction::shapeDoubleClick;
+        GraphicsView::Move = &MouseAction::shapeMove;
+        GraphicsView::Release = &MouseAction::shapeRelease;
+    }
+    else {
+
+    }
+}
+
 void MouseAction::vectorPress(QMouseEvent *e)
 {
 
@@ -83,4 +96,17 @@ void MouseAction::vectorMove(QMouseEvent *e)
 void MouseAction::vectorRelease(QMouseEvent *e)
 {
 
+}
+
+void MouseAction::vectorToggle(bool toggle)
+{
+    if (toggle) {
+        GraphicsView::Press = &MouseAction::vectorPress;
+        GraphicsView::DoubleClick = &MouseAction::vectorDoubleClick;
+        GraphicsView::Move = &MouseAction::vectorMove;
+        GraphicsView::Release = &MouseAction::vectorRelease;
+    }
+    else {
+
+    }
 }

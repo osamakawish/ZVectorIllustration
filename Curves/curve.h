@@ -29,6 +29,7 @@ public:
 
     Node *first();
     Node *last();
+    Node *selected();
 
     void updatePath();
 
