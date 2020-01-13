@@ -9,7 +9,10 @@ const qreal Node::nodeRadius = 6;
 
 Node::Node(QPointF p, class Curve *curve, QGraphicsItem *parent) :  QAbstractGraphicsShapeItem(parent),
     Point(p), Curve(curve), In(new Vector(this,this->point(),parentItem())), Out(new Vector(this,this->point(),parentItem()))
-{setPos(p); QGraphicsScene *scene = curve->scene(); scene->addItem(this); scene->addItem(In); scene->addItem(Out); }
+{
+    setPos(p); QGraphicsScene *scene = curve->scene(); scene->addItem(this); scene->addItem(In); scene->addItem(Out);
+    setFlags(GraphicsItemFlag::ItemIgnoresTransformations | GraphicsItemFlag::ItemIsSelectable | GraphicsItemFlag::ItemIsMovable);
+}
 
 Node::~Node()
 { delete In; delete Out; }

@@ -1,8 +1,8 @@
 #include "penaction.h"
 
 #include "mousebehaviour.h"
-#include "../Curves/curve.h"
-#include "../graphicsview.h"
+#include "../GraphicsItems/Curves/curve.h"
+#include "../Windows/MainWindow/MainWidgets/graphicsview.h"
 
 #include <QDebug>
 

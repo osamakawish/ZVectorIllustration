@@ -140,7 +140,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/Icons/penShapeIcon.png</normaloff>:/Icons/penShapeIcon.png</iconset>
    </property>
    <property name="text">
@@ -152,7 +152,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/Icons/penVectorIcon.png</normaloff>:/Icons/penVectorIcon.png</iconset>
    </property>
    <property name="text">
@@ -214,7 +214,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/Icons/mouseShapeIcon.png</normaloff>:/Icons/mouseShapeIcon.png</iconset>
    </property>
    <property name="text">
@@ -226,7 +226,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/Icons/mouseVectorIcon.png</normaloff>:/Icons/mouseVectorIcon.png</iconset>
    </property>
    <property name="text">
@@ -238,7 +238,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/Icons/zoomShapeIcon.png</normaloff>:/Icons/zoomShapeIcon.png</iconset>
    </property>
    <property name="text">
@@ -250,7 +250,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/Icons/zoomVectorIcon.png</normaloff>:/Icons/zoomVectorIcon.png</iconset>
    </property>
    <property name="text">
@@ -262,7 +262,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/Icons/textShapeIcon.png</normaloff>:/Icons/textShapeIcon.png</iconset>
    </property>
    <property name="text">
@@ -274,7 +274,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/Icons/textVectorIcon.png</normaloff>:/Icons/textVectorIcon.png</iconset>
    </property>
    <property name="text">
@@ -286,18 +286,16 @@
   <customwidget>
    <class>FileWidget</class>
    <extends>QWidget</extends>
-   <header>filewidget.h</header>
+   <header>Windows/MainWindow/MainWidgets/filewidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>PropertyWidget</class>
    <extends>QWidget</extends>
-   <header>propertywidget.h</header>
+   <header>Windows/MainWindow/MainWidgets/propertywidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

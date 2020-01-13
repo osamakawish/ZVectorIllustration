@@ -32,4 +32,16 @@ public:
     void setSelectedColoring(ColorFunc penChange, ColorFunc brushChange);
 };
 
+class Drawable : GraphicsItem {
+public:
+    Drawable(QGraphicsItem *parent=nullptr);
+    virtual ~Drawable();
+
+
+};
+
+class Shape : Drawable {
+
+};
+
 #endif // GRAPHICSITEM_H

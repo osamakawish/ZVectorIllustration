@@ -3,7 +3,7 @@
 #include <QCursor>
 #include <QDebug>
 #include <QMouseEvent>
-#include "graphicsview.h"
+#include "../Windows/MainWindow/MainWidgets/graphicsview.h"
 
 namespace {
     bool IsPressed=false; bool IsDoubleClicked=false;

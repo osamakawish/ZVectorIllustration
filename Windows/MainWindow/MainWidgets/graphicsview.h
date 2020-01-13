@@ -24,10 +24,12 @@ class GraphicsView : public QGraphicsView
     void initialize();
     void test();
 
-    void filter(QGraphicsItem *item, QList<QGraphicsItem *> &items);
-    void filter(QGraphicsItem::GraphicsItemFlag flag, QList<QGraphicsItem *> &items);
+    static void filterOut(QGraphicsItem *item, QList<QGraphicsItem *> &items);
+    static void filterIn(QGraphicsItem::GraphicsItemFlag flag, QList<QGraphicsItem *> &items);
     template<class T>
-    void filter(QList<QGraphicsItem *> &items);
+    static void filterIn(QList<QGraphicsItem *> &items);
+    template<class T>
+    static void filterOut(QList<QGraphicsItem *> &items);
 
     qreal minZValue(QList<QGraphicsItem *> items);
     qreal maxZValue(QList<QGraphicsItem *> items);

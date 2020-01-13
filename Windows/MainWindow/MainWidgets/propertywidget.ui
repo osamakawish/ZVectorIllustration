@@ -23,7 +23,7 @@
    <item>
     <widget class="QToolBox" name="toolBox">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="documentPage">
       <property name="geometry">
@@ -473,19 +473,19 @@
   <customwidget>
    <class>ValueSetter</class>
    <extends>QWidget</extends>
-   <header>SubWidgets/valuesetter.h</header>
+   <header>Windows/MainWindow/SubWidgets/valuesetter.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>ColorSetter</class>
    <extends>QWidget</extends>
-   <header>SubWidgets/colorsetter.h</header>
+   <header>Windows/MainWindow/SubWidgets/colorsetter.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>RadioButtonGrid</class>
    <extends>QWidget</extends>
-   <header>SubWidgets/radiobuttongrid.h</header>
+   <header>Windows/MainWindow/SubWidgets/radiobuttongrid.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

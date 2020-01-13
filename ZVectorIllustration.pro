@@ -21,20 +21,21 @@ SOURCES += \
     ActionMethods/penaction.cpp \
     ActionMethods/textaction.cpp \
     ActionMethods/zoomaction.cpp \
-    Curves/curve.cpp \
-    Curves/graphicsitem.cpp \
-    Curves/node.cpp \
-    Curves/vector.cpp \
-    SubWidgets/colorsetter.cpp \
-    SubWidgets/radiobuttongrid.cpp \
-    SubWidgets/valuesetter.cpp \
+    GraphicsItems/Curves/curve.cpp \
+    GraphicsItems/Curves/node.cpp \
+    GraphicsItems/Curves/vector.cpp \
+    GraphicsItems/Shapes/shape.cpp \
+    GraphicsItems/graphicsitem.cpp \
+    Windows/MainWindow/MainWidgets/filewidget.cpp \
+    Windows/MainWindow/MainWidgets/graphicsview.cpp \
+    Windows/MainWindow/MainWidgets/propertywidget.cpp \
+    Windows/MainWindow/SubWidgets/colorsetter.cpp \
+    Windows/MainWindow/SubWidgets/radiobuttongrid.cpp \
+    Windows/MainWindow/SubWidgets/valuesetter.cpp \
+    Windows/MainWindow/mainwindow.cpp \
     Windows/settingswindow.cpp \
     Windows/helpwindow.cpp \
-    filewidget.cpp \
-    graphicsview.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    propertywidget.cpp
+    main.cpp
 
 HEADERS += \
     ActionMethods/mouseaction.h \
@@ -42,29 +43,30 @@ HEADERS += \
     ActionMethods/penaction.h \
     ActionMethods/textaction.h \
     ActionMethods/zoomaction.h \
-    Curves/curve.h \
-    Curves/graphicsitem.h \
-    Curves/node.h \
-    Curves/vector.h \
-    SubWidgets/colorsetter.h \
-    SubWidgets/radiobuttongrid.h \
-    SubWidgets/valuesetter.h \
+    GraphicsItems/Curves/curve.h \
+    GraphicsItems/Curves/node.h \
+    GraphicsItems/Curves/vector.h \
+    GraphicsItems/Shapes/shape.h \
+    GraphicsItems/graphicsitem.h \
+    Windows/MainWindow/MainWidgets/filewidget.h \
+    Windows/MainWindow/MainWidgets/graphicsview.h \
+    Windows/MainWindow/MainWidgets/propertywidget.h \
+    Windows/MainWindow/SubWidgets/colorsetter.h \
+    Windows/MainWindow/SubWidgets/radiobuttongrid.h \
+    Windows/MainWindow/SubWidgets/valuesetter.h \
+    Windows/MainWindow/mainwindow.h \
     Windows/settingswindow.h \
-    Windows/helpwindow.h \
-    filewidget.h \
-    graphicsview.h \
-    mainwindow.h \
-    propertywidget.h
+    Windows/helpwindow.h
 
 FORMS += \
-    SubWidgets/colorsetter.ui \
-    SubWidgets/radiobuttongrid.ui \
-    SubWidgets/valuesetter.ui \
+    Windows/MainWindow/MainWidgets/filewidget.ui \
+    Windows/MainWindow/MainWidgets/propertywidget.ui \
+    Windows/MainWindow/SubWidgets/colorsetter.ui \
+    Windows/MainWindow/SubWidgets/radiobuttongrid.ui \
+    Windows/MainWindow/SubWidgets/valuesetter.ui \
+    Windows/MainWindow/mainwindow.ui \
     Windows/settingswindow.ui \
-    Windows/helpwindow.ui \
-    filewidget.ui \
-    mainwindow.ui \
-    propertywidget.ui
+    Windows/helpwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -72,4 +74,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    icons.qrc
+    Windows/MainWindow/icons.qrc

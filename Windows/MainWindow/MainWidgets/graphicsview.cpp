@@ -10,7 +10,7 @@
 #include <limits>
 #include <QDebug>
 
-#include "Curves/curve.h"
+#include "../../../GraphicsItems/Curves/curve.h"
 
 MouseEvent GraphicsView::Press = MouseAction::shapePress;
 MouseEvent GraphicsView::DoubleClick = MouseAction::shapeDoubleClick;
@@ -56,13 +56,17 @@ void GraphicsView::test()
     c->showNodes(); c->showVectors();
 }
 
-void GraphicsView::filter(QGraphicsItem *item, QList<QGraphicsItem *> &items) { items.removeAll(item); }
+void GraphicsView::filterOut(QGraphicsItem *item, QList<QGraphicsItem *> &items) { items.removeAll(item); }
 
-void GraphicsView::filter(QGraphicsItem::GraphicsItemFlag flag, QList<QGraphicsItem *> &items)
+void GraphicsView::filterIn(QGraphicsItem::GraphicsItemFlag flag, QList<QGraphicsItem *> &items)
 { int i=0; while (i<items.length()) { if (items[i]->flags().testFlag(flag)) {i++;} else {items.removeAt(i);} } }
 
 template<class T>
-void GraphicsView::filter(QList<QGraphicsItem *> &items)
+void GraphicsView::filterIn(QList<QGraphicsItem *> &items)
+{ int i=0; while (i<items.length()) { if (dynamic_cast<T *>(items[i])) {i++;} else {items.removeAt(i);} } }
+
+template<class T>
+void GraphicsView::filterOut(QList<QGraphicsItem *> &items)
 { int i=0; while (i<items.length()) { if (dynamic_cast<T *>(items[i])) {items.removeAt(i);} else {i++;} } }
 
 qreal GraphicsView::minZValue(QList<QGraphicsItem *> items)
@@ -132,15 +136,13 @@ void GraphicsView::select(QPainterPath selectionPath)
 {
     QList<QGraphicsItem *> items = scene()->items(selectionPath);
 
-    filter(SelectionRect, items); filter<Node>(items); filter<Vector>(items);
-    filter(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable, items);
+    filterOut(SelectionRect, items); filterOut<Node>(items); filterOut<Vector>(items);
+    filterIn(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable, items);
 
     SelectionGroup = scene()->createItemGroup(items); SelectionGroup->setZValue(maxZValue(items));
 
     SelectionRect->setRect(SelectionGroup->boundingRect()); SelectionRect->setZValue(std::numeric_limits<qreal>::max());
     SelectionRect->show();
-
-    qDebug() << SelectionRect->zValue() << SheetRect->zValue();
 }
 
 QList<QGraphicsItem *> GraphicsView::selectedItems()

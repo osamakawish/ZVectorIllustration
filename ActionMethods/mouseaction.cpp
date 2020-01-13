@@ -3,11 +3,11 @@
 #include <QDebug>
 
 #include "mouseaction.h"
-#include "graphicsview.h"
+#include "../Windows/MainWindow/MainWidgets/graphicsview.h"
 #include "mousebehaviour.h"
-#include "Curves/curve.h"
-#include "Curves/graphicsitem.h"
-#include "mainwindow.h"
+#include "../GraphicsItems/Curves/curve.h"
+#include "../GraphicsItems/graphicsitem.h"
+#include "../Windows/MainWindow/mainwindow.h"
 
 QSet<Vector *> MouseAction::VectorsSelected = {};
 QSet<Node *> MouseAction::NodesSelected = {};
@@ -34,9 +34,9 @@ MainWindow *MouseAction::getMainWindow(QObject *w)
 
 void MouseAction::shapePress(QMouseEvent *e)
 {
-    auto scene = MouseBehaviour::scene();
+    auto view = MouseBehaviour::view();
     // If nothing is selected or the selection area doesn't contain the point:
-    if (scene->selectedItems().isEmpty() || !scene->selectionArea().contains(MouseBehaviour::scenePos(e->pos())))
+    if (view->selectedItems().isEmpty() || !view->selectionRect()->contains(MouseBehaviour::scenePos(e->pos())))
     { selectionRect()->show(); updateSelectionPath(MouseBehaviour::pos(),MouseBehaviour::pos()); }
 
     // Otherwise move the object.
@@ -148,19 +148,16 @@ void MouseAction::vectorToggle(bool toggle)
 }
 
 template<typename T>
-void MouseAction::press(QMouseEvent *e, QSet<T> &selected)
-{
+void MouseAction::prepSelect()
+{ updateSelectionPath(MouseBehaviour::pos(),MouseBehaviour::moved()); }
 
-}
 
-template<typename T>
-void MouseAction::move(QMouseEvent *e, QSet<T> &selected)
-{
 
-}
 
-template<typename T>
-void MouseAction::release(QMouseEvent *e, QSet<T> &selected)
-{
 
-}
+
+
+
+
+
+

@@ -17,12 +17,11 @@ class MouseAction
     static QGraphicsRectItem *selectionRect();
     static MainWindow *getMainWindow(QObject *w);
 
+    //! Called when the mouse is pressed.
     template<typename T>
-    static void press(QMouseEvent *e, QSet<T> &selected);
+    static void prepSelect();
     template<typename T>
-    static void move(QMouseEvent *e, QSet<T> &selected);
-    template<typename T>
-    static void release(QMouseEvent *e, QSet<T> &selected);
+    static QList<T *> select(QSet<T *> &set);
 
 public:
     static void shapePress(QMouseEvent *e);

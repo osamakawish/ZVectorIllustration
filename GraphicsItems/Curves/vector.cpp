@@ -1,4 +1,4 @@
-#include "../graphicsview.h"
+#include "../../Windows/MainWindow/MainWidgets/graphicsview.h"
 #include "curve.h"
 
 #include <QPainter>

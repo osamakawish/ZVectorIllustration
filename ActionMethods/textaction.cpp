@@ -1,6 +1,6 @@
 #include "textaction.h"
 
-#include "../graphicsview.h"
+#include "../Windows/MainWindow/MainWidgets/graphicsview.h"
 
 void TextAction::shapePress(QMouseEvent *e)
 {

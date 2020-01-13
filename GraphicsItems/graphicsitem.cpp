@@ -9,9 +9,7 @@ GraphicsItem::GraphicsItem(QGraphicsItem *parent) : QAbstractGraphicsShapeItem(p
 }
 
 GraphicsItem::~GraphicsItem()
-{
-
-}
+{}
 
 void GraphicsItem::setSelectedColoring(ColorFunc brushChange)
 {

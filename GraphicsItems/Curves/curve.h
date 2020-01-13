@@ -7,7 +7,7 @@
 #include <utility>
 
 #include "node.h"
-#include "graphicsitem.h"
+#include "../graphicsitem.h"
 
 class Curve : public GraphicsItem {
     std::unordered_map<Node *,std::pair<Node *, Node*>> Nodes;
