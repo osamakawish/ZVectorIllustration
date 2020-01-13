@@ -21,11 +21,11 @@ void GraphicsView::initialize()
 {
     setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
 
-    SelectionRect = RectItemPtr(scene()->addRect(QRectF()));
     setSceneRect(QRectF(0,0,200,400)); setBackgroundBrush(Qt::Dense6Pattern);
-    SelectionRect->setZValue(std::numeric_limits<double>::max());
-    SheetRect = RectItemPtr(scene()->addRect(sceneRect(),QPen(),QBrush(Qt::white)));
-    SheetRect->setZValue(-std::numeric_limits<double>::max());
+    SheetRect = new QGraphicsRectItem(scene()->addRect(sceneRect(),QPen(),QBrush(Qt::white)));
+    SheetRect->setZValue(-std::numeric_limits<qreal>::max());
+    SelectionRect = new QGraphicsRectItem(scene()->addRect(QRectF()));
+    SelectionRect->setZValue(std::numeric_limits<qreal>::max()); SelectionRect->setPen(QPen(Qt::DashLine));
     setMouseTracking(true);
 
     test();
@@ -56,11 +56,46 @@ void GraphicsView::test()
     c->showNodes(); c->showVectors();
 }
 
+void GraphicsView::filter(QGraphicsItem *item, QList<QGraphicsItem *> &items) { items.removeAll(item); }
+
+void GraphicsView::filter(QGraphicsItem::GraphicsItemFlag flag, QList<QGraphicsItem *> &items)
+{ int i=0; while (i<items.length()) { if (items[i]->flags().testFlag(flag)) {i++;} else {items.removeAt(i);} } }
+
+template<class T>
+void GraphicsView::filter(QList<QGraphicsItem *> &items)
+{ int i=0; while (i<items.length()) { if (dynamic_cast<T *>(items[i])) {items.removeAt(i);} else {i++;} } }
+
+qreal GraphicsView::minZValue(QList<QGraphicsItem *> items)
+{
+    qreal min = std::numeric_limits<double>::max();
+    foreach (auto item, items) {
+        qreal n = item->zValue();
+        if (n < min) min = n;
+    }
+    return min;
+}
+
+qreal GraphicsView::maxZValue(QList<QGraphicsItem *> items)
+{
+    qreal max = std::numeric_limits<double>::min();
+    foreach (auto item, items) {
+        qreal n = item->zValue();
+        if (n > max) max = n;
+    }
+    return max;
+}
+
 GraphicsView::GraphicsView(QWidget *parent) : QGraphicsView(parent)
 { setScene(new QGraphicsScene); initialize(); }
 
 GraphicsView::GraphicsView(QGraphicsScene *scene, QWidget *parent) : QGraphicsView(scene,parent)
 { initialize(); }
+
+GraphicsView::~GraphicsView()
+{
+    delete SelectionRect;
+    delete SheetRect;
+}
 
 QRectF GraphicsView::rectangle(const QPointF &p1, const QPointF &p2)
 {
@@ -86,3 +121,30 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *e)
 
 void GraphicsView::mouseReleaseEvent(QMouseEvent *e)
 { MouseBehaviour::release(); Release(e); }
+
+QGraphicsRectItem *GraphicsView::selectionRect()
+{ return SelectionRect; }
+
+void GraphicsView::select(QRectF selectionRect)
+{ QPainterPath path = QPainterPath(); path.addRect(selectionRect); select(path); }
+
+void GraphicsView::select(QPainterPath selectionPath)
+{
+    QList<QGraphicsItem *> items = scene()->items(selectionPath);
+
+    filter(SelectionRect, items); filter<Node>(items); filter<Vector>(items);
+    filter(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable, items);
+
+    SelectionGroup = scene()->createItemGroup(items); SelectionGroup->setZValue(maxZValue(items));
+
+    SelectionRect->setRect(SelectionGroup->boundingRect()); SelectionRect->setZValue(std::numeric_limits<qreal>::max());
+    SelectionRect->show();
+
+    qDebug() << SelectionRect->zValue() << SheetRect->zValue();
+}
+
+QList<QGraphicsItem *> GraphicsView::selectedItems()
+{ return SelectionGroup->childItems(); }
+
+void GraphicsView::deselect()
+{ scene()->destroyItemGroup(SelectionGroup); SelectionRect->setRect(QRectF()); SelectionRect->hide(); }

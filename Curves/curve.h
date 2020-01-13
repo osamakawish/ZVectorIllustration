@@ -7,8 +7,9 @@
 #include <utility>
 
 #include "node.h"
+#include "graphicsitem.h"
 
-class Curve : public QAbstractGraphicsShapeItem {
+class Curve : public GraphicsItem {
     std::unordered_map<Node *,std::pair<Node *, Node*>> Nodes;
     Node *First; Node *Last; Node *Selected;
     bool nodesShown, vectorsShown;

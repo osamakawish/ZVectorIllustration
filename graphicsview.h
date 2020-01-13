@@ -14,21 +14,28 @@ class ZoomAction;
 class MainWindow;
 
 typedef void (*MouseEvent)(QMouseEvent *);
-typedef std::unique_ptr<QGraphicsRectItem> RectItemPtr;
-typedef std::unique_ptr<QGraphicsItemGroup> ItemGroupPtr;
 
 class GraphicsView : public QGraphicsView
 {
     static MouseEvent Press, DoubleClick, Move, Release;
-    RectItemPtr SelectionRect; ItemGroupPtr SelectionGroup;
-    RectItemPtr SheetRect;
+    QGraphicsRectItem *SelectionRect; QGraphicsItemGroup *SelectionGroup;
+    QGraphicsRectItem *SheetRect;
 
     void initialize();
     void test();
 
+    void filter(QGraphicsItem *item, QList<QGraphicsItem *> &items);
+    void filter(QGraphicsItem::GraphicsItemFlag flag, QList<QGraphicsItem *> &items);
+    template<class T>
+    void filter(QList<QGraphicsItem *> &items);
+
+    qreal minZValue(QList<QGraphicsItem *> items);
+    qreal maxZValue(QList<QGraphicsItem *> items);
+
 public:
     GraphicsView(QWidget *parent = nullptr);
     GraphicsView(QGraphicsScene *scene, QWidget *parent = nullptr);
+    ~GraphicsView();
 
     static QRectF rectangle(const QPointF &p1, const QPointF &p2);
 
@@ -36,6 +43,12 @@ public:
     void mouseDoubleClickEvent(QMouseEvent *e) override;
     void mouseMoveEvent(QMouseEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *e) override;
+
+    QGraphicsRectItem *selectionRect();
+    void select(QRectF selectionRect);
+    void select(QPainterPath selectionPath);
+    QList<QGraphicsItem *> selectedItems();
+    void deselect();
 
     friend class MouseAction; friend class PenAction;
     friend class TextAction; friend class ZoomAction;

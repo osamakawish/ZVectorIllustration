@@ -18,7 +18,7 @@ void Curve::drawSegment(Node *current, Node *next)
     Path.cubicTo( c1, c2, next->point() );
 }
 
-Curve::Curve(QPointF pt, QGraphicsScene *scene, QGraphicsItem *parent) : QAbstractGraphicsShapeItem(parent)
+Curve::Curve(QPointF pt, QGraphicsScene *scene, QGraphicsItem *parent) : GraphicsItem(parent)
 {
     scene->addItem(this); // Must be done first so node can update its scene to curve's scene.
     First = new Node(pt,this,parentItem()); Last = First; Selected = First;
@@ -27,13 +27,17 @@ Curve::Curve(QPointF pt, QGraphicsScene *scene, QGraphicsItem *parent) : QAbstra
 }
 
 Curve::~Curve()
-{ delete First; delete Last; delete Selected; }
+{
+    delete First;
+    delete Last;
+    delete Selected;
+}
 
 // Note: Must make sure that each Curve is a series of nodes (no node has more than one prev/next node).
 // Better to allow tail nodes (First and Last) to be selectable but not others.
 Node *Curve::add(QPointF p)
 {
-    Node *nd = new Node(p,this,parentItem()); scene()->addItem(nd);
+    Node *nd = new Node(p,this,parentItem());
     Nodes.insert( std::pair<Node *,NodePair>(nd,NodePair(Selected,nullptr)) );
     Nodes.at(Selected).second = nd;
 
@@ -108,6 +112,7 @@ void Curve::setParentItem(QGraphicsItem *parent)
 void Curve::paint(QPainter *p, const QStyleOptionGraphicsItem *, QWidget *)
 { updatePath(); p->drawPath(Path); }
 
+//! @note Need to update everything so pos is located at center.
 QRectF Curve::boundingRect() const
 {
     QRectF beforeEdges = Path.boundingRect(); QPointF edgeDiff = QPointF(pen().widthF(),pen().widthF());

@@ -12,7 +12,7 @@ Node::Node(QPointF p, class Curve *curve, QGraphicsItem *parent) :  QAbstractGra
 {setPos(p); QGraphicsScene *scene = curve->scene(); scene->addItem(this); scene->addItem(In); scene->addItem(Out); }
 
 Node::~Node()
-{ delete In; delete Out; delete Curve; }
+{ delete In; delete Out; }
 
 //! Creates a copy of a node at this point to initiate a new curve.
 //! Use this when the node is not a tail (first or last) node of the curve.
@@ -23,7 +23,7 @@ QPointF Node::point()
 { return Point; }
 
 void Node::setScene(QGraphicsScene *scene)
-{ scene->addItem(this); scene->addItem(In); scene->addItem(Out); qDebug() << In->scene() << Out->scene(); }
+{ scene->addItem(this); scene->addItem(In); scene->addItem(Out); }
 
 void Node::move(QPointF pt)
 { setPos(pt); In->setPos(pt); Out->setPos(pt); }
@@ -47,7 +47,7 @@ void Node::inVector(QPointF head)
 { In->head(head); }
 
 void Node::outVector(QPointF head)
-{ Out->head(head); qDebug() << Out->tail() << Out->head() << Out->pos() << Out->scene(); }
+{ Out->head(head); }
 
 Node *Node::previousNode()
 { return Curve->Nodes.at(this).first; }
@@ -55,8 +55,25 @@ Node *Node::previousNode()
 Node *Node::nextNode()
 { return Curve->Nodes.at(this).first; }
 
+void Node::select()
+{
+
+}
+
+void Node::deselect()
+{
+
+}
+
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
-{ painter->drawEllipse(-nodeRadius,-nodeRadius,2*nodeRadius,2*nodeRadius); }
+{
+    QPen pen(painter->pen()); QBrush brush(painter->brush());
+
+    painter->setPen(QPen(Qt::blue)); painter->setBrush(QColor(0,0,255,128));
+    painter->drawEllipse(-nodeRadius,-nodeRadius,2*nodeRadius,2*nodeRadius);
+
+    painter->setPen(pen); painter->setBrush(brush);
+}
 
 QRectF Node::boundingRect() const
 { return QRectF(-nodeRadius-pen().widthF(),-nodeRadius-pen().widthF(),

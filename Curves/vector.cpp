@@ -59,6 +59,16 @@ QPolygonF Vector::arrowHead()
 bool Vector::arrowHeadContains(QPointF pt)
 { return ArrowHead.containsPoint(pt,Qt::FillRule::WindingFill); }
 
+void Vector::select()
+{
+
+}
+
+void Vector::deselect()
+{
+
+}
+
 void Vector::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     QBrush brush = painter->brush(); painter->setBrush(QColor(0,0,196,128));

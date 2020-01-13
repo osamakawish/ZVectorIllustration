@@ -2,13 +2,27 @@
 #define MOUSEACTION_H
 
 #include <memory>
+#include <QSet>
 
-class GraphicsView; class QPainterPath; class QMouseEvent; class QPointF;
+class GraphicsView; class QPainterPath; class QMouseEvent; class QPointF; class Curve;
+class MainWindow; class QWidget; class QObject; class QGraphicsRectItem;
+class Node; class Vector;
 
 class MouseAction
 {
-    static QPainterPath SelectionPath;
+    static QSet<Vector *> VectorsSelected;
+    static QSet<Node *> NodesSelected;
+    static QSet<Curve *> CurvesSelected;
     static void updateSelectionPath(QPointF p1, QPointF p2);
+    static QGraphicsRectItem *selectionRect();
+    static MainWindow *getMainWindow(QObject *w);
+
+    template<typename T>
+    static void press(QMouseEvent *e, QSet<T> &selected);
+    template<typename T>
+    static void move(QMouseEvent *e, QSet<T> &selected);
+    template<typename T>
+    static void release(QMouseEvent *e, QSet<T> &selected);
 
 public:
     static void shapePress(QMouseEvent *e);

@@ -38,5 +38,7 @@ private:
     void prepareGraphicsActions(); void connectGraphicsActions();
 
     Ui::MainWindow *ui;
+
+    friend class MouseAction;
 };
 #endif // MAINWINDOW_H
