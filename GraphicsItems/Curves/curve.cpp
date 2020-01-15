@@ -18,7 +18,7 @@ void Curve::drawSegment(Node *current, Node *next)
     Path.cubicTo( c1, c2, next->point() );
 }
 
-Curve::Curve(QPointF pt, QGraphicsScene *scene, QGraphicsItem *parent) : GraphicsItem(parent)
+Curve::Curve(QPointF pt, QGraphicsScene *scene, QGraphicsItem *parent) : Drawable(parent)
 {
     scene->addItem(this); // Must be done first so node can update its scene to curve's scene.
     First = new Node(pt,this,parentItem()); Last = First; Selected = First;

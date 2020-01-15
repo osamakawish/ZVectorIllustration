@@ -7,11 +7,12 @@
 const qreal Node::nodeRadius = 6;
 
 
-Node::Node(QPointF p, class Curve *curve, QGraphicsItem *parent) :  QAbstractGraphicsShapeItem(parent),
+Node::Node(QPointF p, class Curve *curve, QGraphicsItem *parent) :  Selectable(parent),
     Point(p), Curve(curve), In(new Vector(this,this->point(),parentItem())), Out(new Vector(this,this->point(),parentItem()))
 {
     setPos(p); QGraphicsScene *scene = curve->scene(); scene->addItem(this); scene->addItem(In); scene->addItem(Out);
     setFlags(GraphicsItemFlag::ItemIgnoresTransformations | GraphicsItemFlag::ItemIsSelectable | GraphicsItemFlag::ItemIsMovable);
+    setPen(QPen(Qt::blue)); setBrush(QColor(0,0,255,128));
 }
 
 Node::~Node()
@@ -59,24 +60,13 @@ Node *Node::nextNode()
 { return Curve->Nodes.at(this).first; }
 
 void Node::select()
-{
-
-}
+{ setBrush(QColor(0,0,196,196)); update(boundingRect()); }
 
 void Node::deselect()
-{
-
-}
+{ setBrush(QColor(0,0,255,128)); update(boundingRect()); }
 
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
-{
-    QPen pen(painter->pen()); QBrush brush(painter->brush());
-
-    painter->setPen(QPen(Qt::blue)); painter->setBrush(QColor(0,0,255,128));
-    painter->drawEllipse(-nodeRadius,-nodeRadius,2*nodeRadius,2*nodeRadius);
-
-    painter->setPen(pen); painter->setBrush(brush);
-}
+{ painter->setPen(pen()); painter->setBrush(brush()); painter->drawEllipse(-nodeRadius,-nodeRadius,2*nodeRadius,2*nodeRadius); }
 
 QRectF Node::boundingRect() const
 { return QRectF(-nodeRadius-pen().widthF(),-nodeRadius-pen().widthF(),

@@ -11,6 +11,7 @@
 #include <QDebug>
 
 #include "../../../GraphicsItems/Curves/curve.h"
+#include "../../../GraphicsItems/Shapes/shape.h"
 
 MouseEvent GraphicsView::Press = MouseAction::shapePress;
 MouseEvent GraphicsView::DoubleClick = MouseAction::shapeDoubleClick;
@@ -25,7 +26,9 @@ void GraphicsView::initialize()
     SheetRect = new QGraphicsRectItem(scene()->addRect(sceneRect(),QPen(),QBrush(Qt::white)));
     SheetRect->setZValue(-std::numeric_limits<qreal>::max());
     SelectionRect = new QGraphicsRectItem(scene()->addRect(QRectF()));
-    SelectionRect->setZValue(std::numeric_limits<qreal>::max()); SelectionRect->setPen(QPen(Qt::DashLine));
+    SelectionRect->setZValue(std::numeric_limits<qreal>::max());
+    SelectionRect->setPen(QPen(Qt::DashLine));
+    SelectionGroup = scene()->createItemGroup(QList<QGraphicsItem *>());
     setMouseTracking(true);
 
     test();
@@ -33,9 +36,8 @@ void GraphicsView::initialize()
 
 void GraphicsView::test()
 {
-    QGraphicsEllipseItem *ellipse = scene()->addEllipse(0,0,100,200);
-    QGraphicsLineItem *line = scene()->addLine(20,20,300,100);
-    line->setParentItem(ellipse);
+    Ellipse *ellipse = new Ellipse(QRectF(20,20,100,200)); scene()->addItem(ellipse);
+    scene()->addRect(20,20,100,200);
 
     ellipse->setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable);
     ellipse->setZValue(20);
@@ -55,19 +57,6 @@ void GraphicsView::test()
     c->add(QPointF(100,80));
     c->showNodes(); c->showVectors();
 }
-
-void GraphicsView::filterOut(QGraphicsItem *item, QList<QGraphicsItem *> &items) { items.removeAll(item); }
-
-void GraphicsView::filterIn(QGraphicsItem::GraphicsItemFlag flag, QList<QGraphicsItem *> &items)
-{ int i=0; while (i<items.length()) { if (items[i]->flags().testFlag(flag)) {i++;} else {items.removeAt(i);} } }
-
-template<class T>
-void GraphicsView::filterIn(QList<QGraphicsItem *> &items)
-{ int i=0; while (i<items.length()) { if (dynamic_cast<T *>(items[i])) {i++;} else {items.removeAt(i);} } }
-
-template<class T>
-void GraphicsView::filterOut(QList<QGraphicsItem *> &items)
-{ int i=0; while (i<items.length()) { if (dynamic_cast<T *>(items[i])) {items.removeAt(i);} else {i++;} } }
 
 qreal GraphicsView::minZValue(QList<QGraphicsItem *> items)
 {
@@ -89,6 +78,9 @@ qreal GraphicsView::maxZValue(QList<QGraphicsItem *> items)
     return max;
 }
 
+void GraphicsView::selectAll(QList<QGraphicsItem *> items)
+{ foreach (auto item, items) { dynamic_cast<Selectable *>(item)->select(); } }
+
 GraphicsView::GraphicsView(QWidget *parent) : QGraphicsView(parent)
 { setScene(new QGraphicsScene); initialize(); }
 
@@ -99,6 +91,7 @@ GraphicsView::~GraphicsView()
 {
     delete SelectionRect;
     delete SheetRect;
+    scene()->destroyItemGroup(SelectionGroup);
 }
 
 QRectF GraphicsView::rectangle(const QPointF &p1, const QPointF &p2)
@@ -129,24 +122,9 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *e)
 QGraphicsRectItem *GraphicsView::selectionRect()
 { return SelectionRect; }
 
-void GraphicsView::select(QRectF selectionRect)
-{ QPainterPath path = QPainterPath(); path.addRect(selectionRect); select(path); }
-
-void GraphicsView::select(QPainterPath selectionPath)
-{
-    QList<QGraphicsItem *> items = scene()->items(selectionPath);
-
-    filterOut(SelectionRect, items); filterOut<Node>(items); filterOut<Vector>(items);
-    filterIn(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable, items);
-
-    SelectionGroup = scene()->createItemGroup(items); SelectionGroup->setZValue(maxZValue(items));
-
-    SelectionRect->setRect(SelectionGroup->boundingRect()); SelectionRect->setZValue(std::numeric_limits<qreal>::max());
-    SelectionRect->show();
-}
-
 QList<QGraphicsItem *> GraphicsView::selectedItems()
 { return SelectionGroup->childItems(); }
 
 void GraphicsView::deselect()
-{ scene()->destroyItemGroup(SelectionGroup); SelectionRect->setRect(QRectF()); SelectionRect->hide(); }
+{ scene()->destroyItemGroup(SelectionGroup); SelectionGroup = scene()->createItemGroup(QList<QGraphicsItem *>());
+SelectionRect->setRect(QRectF()); SelectionRect->hide(); }

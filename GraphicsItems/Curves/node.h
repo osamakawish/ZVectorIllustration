@@ -8,7 +8,7 @@
 class Curve;
 
 // Need to figure out how I'm going to do this.
-class Node : public QAbstractGraphicsShapeItem {
+class Node : public Selectable {
     QPointF Point; Curve *Curve; Vector *In, *Out;
 
 public:
@@ -27,7 +27,8 @@ public:
     Node *previousNode();
     Node *nextNode();
 
-    void select(); void deselect();
+    void select() override;
+    void deselect() override;
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     QRectF boundingRect() const override;

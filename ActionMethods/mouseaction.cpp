@@ -32,18 +32,28 @@ MainWindow *MouseAction::getMainWindow(QObject *w)
     return (window) ? (window) : (getMainWindow(parent));
 }
 
-void MouseAction::shapePress(QMouseEvent *e)
+void MouseAction::press()
 {
-    auto view = MouseBehaviour::view();
-    // If nothing is selected or the selection area doesn't contain the point:
-    if (view->selectedItems().isEmpty() || !view->selectionRect()->contains(MouseBehaviour::scenePos(e->pos())))
-    { selectionRect()->show(); updateSelectionPath(MouseBehaviour::pos(),MouseBehaviour::pos()); }
+    auto view = MouseBehaviour::view(); QPointF pos = MouseBehaviour::pos();
 
-    // Otherwise move the object.
+    // If nothing selected or point outside selection rect, start new selection rect
+    if (view->selectedItems().isEmpty() || !view->selectionRect()->contains(pos))
+    { selectionRect()->show(); updateSelectionPath(pos,pos); }
+
+    // Otherwise, prepare to move object (note:
     else {
 
     }
 }
+
+void MouseAction::move()
+{
+    if (!MouseBehaviour::isPressed()) {return;}
+    updateSelectionPath(MouseBehaviour::pos(),MouseBehaviour::moved());
+}
+
+void MouseAction::shapePress(QMouseEvent *)
+{ press(); }
 
 void MouseAction::shapeDoubleClick(QMouseEvent *)
 {
@@ -52,31 +62,17 @@ void MouseAction::shapeDoubleClick(QMouseEvent *)
 
 void MouseAction::shapeMove(QMouseEvent *)
 {
+    // If nothing selected, control cursor based on mouse position
+
     // If something is selected
     // .. if mouse click within selection, prepare to move
 
     // Otherwise, prepare selection rect.
-    if (!MouseBehaviour::isPressed()) {return;}
-    updateSelectionPath(MouseBehaviour::pos(),MouseBehaviour::moved());
+    move();
 }
 
 void MouseAction::shapeRelease(QMouseEvent *)
-{
-    updateSelectionPath(MouseBehaviour::pos(),MouseBehaviour::scenePos());
-
-    auto view = MouseBehaviour::view();
-    QPainterPath path; path.addRect(selectionRect()->rect()); view->select(path);
-    auto items = MouseBehaviour::view()->selectedItems();
-
-    if (items.isEmpty()) { view->deselect(); CurvesSelected = {}; selectionRect()->hide(); }
-    else {
-        foreach (auto item, items) {
-            Curve *curve = dynamic_cast<Curve *>(item);
-            if (curve) {CurvesSelected.insert(curve);}
-        }
-    }
-    // If mouse was double clicked, switch action to mouseVector
-}
+{ release<Drawable>(CurvesSelected); } // If mouse was double clicked, switch action to mouseVector
 
 void MouseAction::shapeToggle(bool toggle)
 {
@@ -91,8 +87,9 @@ void MouseAction::shapeToggle(bool toggle)
     }
 }
 
-void MouseAction::vectorPress(QMouseEvent *e)
+void MouseAction::vectorPress(QMouseEvent *)
 {
+    press();
     // Again, prepare a selection rectangle.
 
     // If intersects with a node, select it.
@@ -107,6 +104,7 @@ void MouseAction::vectorDoubleClick(QMouseEvent *e)
 
 void MouseAction::vectorMove(QMouseEvent *e)
 {
+    move();
     // Node selection: move node
 
     // Vector selection
@@ -116,6 +114,8 @@ void MouseAction::vectorMove(QMouseEvent *e)
 
 void MouseAction::vectorRelease(QMouseEvent *e)
 {
+    if (NodesSelected.isEmpty()) {release<Node>(NodesSelected); MouseBehaviour::view()->deselect();}
+    else if (VectorsSelected.isEmpty()) {release<Vector>(VectorsSelected);}
     // Node selection: move node and select it.
     // - Single clicked on a node
     // - Double clicked in middle of curve
@@ -146,10 +146,6 @@ void MouseAction::vectorToggle(bool toggle)
         CurvesSelected = {};
     }
 }
-
-template<typename T>
-void MouseAction::prepSelect()
-{ updateSelectionPath(MouseBehaviour::pos(),MouseBehaviour::moved()); }
 
 
 

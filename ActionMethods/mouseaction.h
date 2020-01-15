@@ -2,9 +2,17 @@
 #define MOUSEACTION_H
 
 #include <memory>
-#include <QSet>
+#include <type_traits>
 
-class GraphicsView; class QPainterPath; class QMouseEvent; class QPointF; class Curve;
+#include <QSet>
+#include <QPainterPath>
+
+#include "mousebehaviour.h"
+#include "../GraphicsItems/graphicsitem.h"
+#include "../GraphicsItems/Curves/curve.h"
+#include "../Windows/MainWindow/MainWidgets/graphicsview.h"
+
+class QPainterPath; class QMouseEvent; class QPointF;
 class MainWindow; class QWidget; class QObject; class QGraphicsRectItem;
 class Node; class Vector;
 
@@ -17,11 +25,21 @@ class MouseAction
     static QGraphicsRectItem *selectionRect();
     static MainWindow *getMainWindow(QObject *w);
 
-    //! Called when the mouse is pressed.
-    template<typename T>
-    static void prepSelect();
-    template<typename T>
-    static QList<T *> select(QSet<T *> &set);
+//    template<typename T>
+    static void press();
+    static void move();
+    template<typename S, typename T>
+    static void release(QSet<T *> &set)
+    {
+        if (!std::is_base_of<S,T>::value) {return;}
+        updateSelectionPath(MouseBehaviour::pos(),MouseBehaviour::scenePos());
+
+        auto view = MouseBehaviour::view(); view->select<S>(selectionRect()->rect());
+        auto items = view->selectedItems();
+
+        if (items.isEmpty()) { view->deselect(); set = {}; selectionRect()->hide(); }
+        else { foreach (auto item, items) { T *t = dynamic_cast<T *>(item); if (t) {set.insert(t);} } }
+    }
 
 public:
     static void shapePress(QMouseEvent *e);

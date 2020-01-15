@@ -8,22 +8,12 @@ GraphicsItem::GraphicsItem(QGraphicsItem *parent) : QAbstractGraphicsShapeItem(p
     QPen p(pen()); p.setCosmetic(true); setPen(p);
 }
 
-GraphicsItem::~GraphicsItem()
-{}
+GraphicsItem::~GraphicsItem() {}
 
-void GraphicsItem::setSelectedColoring(ColorFunc brushChange)
-{
-    UponSelection.BrushColor = brushChange(Original.brush().color());
-}
+Selectable::Selectable(QGraphicsItem *parent) : GraphicsItem(parent) {}
 
-void GraphicsItem::setSelectedColoring(ColorFunc penChange, ColorFunc brushChange)
-{
-    UponSelection.PenColor = penChange(Original.pen().color());
-    UponSelection.BrushColor = brushChange(Original.brush().color());
-}
+Selectable::~Selectable() {}
 
-QPen Coloring::pen()
-{ return QPen(PenColor); }
+Drawable::Drawable(QGraphicsItem *parent) : GraphicsItem(parent) {}
 
-QBrush Coloring::brush()
-{ return QBrush(BrushColor); }
+Drawable::~Drawable() {}

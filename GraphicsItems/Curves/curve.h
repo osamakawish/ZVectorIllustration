@@ -9,7 +9,7 @@
 #include "node.h"
 #include "../graphicsitem.h"
 
-class Curve : public GraphicsItem {
+class Curve : public Drawable {
     std::unordered_map<Node *,std::pair<Node *, Node*>> Nodes;
     Node *First; Node *Last; Node *Selected;
     bool nodesShown, vectorsShown;

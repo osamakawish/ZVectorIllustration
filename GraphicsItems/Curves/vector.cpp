@@ -28,11 +28,11 @@ void Vector::updateArrow()
     update(before | after);
 }
 
-Vector::Vector(Node *node, QPointF head, QGraphicsItem *parent) : QAbstractGraphicsShapeItem(parent)
+Vector::Vector(Node *node, QPointF head, QGraphicsItem *parent) : Selectable(parent)
   , Tail(node->point()), Head(head)
 {setPos(Tail); updateArrow();}
 
-Vector::Vector(QPointF tail, QPointF head, QGraphicsItem *parent) : QAbstractGraphicsShapeItem(parent)
+Vector::Vector(QPointF tail, QPointF head, QGraphicsItem *parent) : Selectable(parent)
   , Tail(tail), Head(head)
 {setPos(Tail); updateArrow();}
 
@@ -56,32 +56,23 @@ QPointF Vector::tail()
 QPolygonF Vector::arrowHead()
 { return ArrowHead; }
 
-bool Vector::arrowHeadContains(QPointF pt)
-{ return ArrowHead.containsPoint(pt,Qt::FillRule::WindingFill); }
+bool Vector::arrowHeadContains(QPointF scenePt)
+{ return ArrowHead.containsPoint(mapFromScene(scenePt),Qt::FillRule::WindingFill); }
 
 void Vector::select()
-{
-
-}
+{ Brush.setColor(QColor(64,64,196)); qreal w = Pen.widthF() / 2; update(ArrowHead.boundingRect().adjusted(-w,-w,w,w)); }
 
 void Vector::deselect()
-{
-
-}
+{ Brush.setColor(QColor(64,64,255)); qreal w = Pen.widthF() / 2; update(ArrowHead.boundingRect().adjusted(-w,-w,w,w)); }
 
 void Vector::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    QBrush brush = painter->brush(); painter->setBrush(QColor(0,0,196,128));
-    QPen pen = painter->pen(); painter->setPen(Qt::black);
+    QBrush brush = painter->brush(); painter->setBrush(Brush);
+    QPen pen = painter->pen(); painter->setPen(Pen);
 
     paintArrowHead(painter);
     painter->drawLine(QPointF(),P3);
-
-    painter->setBrush(brush); painter->setPen(pen);
 }
 
 QRectF Vector::boundingRect() const
-{
-
-    return GraphicsView::rectangle(Head-Tail,QPointF());
-}
+{ return GraphicsView::rectangle(Head,QPointF()); }
