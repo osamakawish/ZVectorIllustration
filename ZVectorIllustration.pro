@@ -26,8 +26,9 @@ SOURCES += \
     GraphicsItems/Curves/vector.cpp \
     GraphicsItems/Shapes/shape.cpp \
     GraphicsItems/graphicsitem.cpp \
+    Windows/MainWindow/MainWidgets/GraphicsView/graphicsview.cpp \
+    Windows/MainWindow/MainWidgets/GraphicsView/selection.cpp \
     Windows/MainWindow/MainWidgets/filewidget.cpp \
-    Windows/MainWindow/MainWidgets/graphicsview.cpp \
     Windows/MainWindow/MainWidgets/propertywidget.cpp \
     Windows/MainWindow/SubWidgets/colorsetter.cpp \
     Windows/MainWindow/SubWidgets/radiobuttongrid.cpp \
@@ -48,8 +49,9 @@ HEADERS += \
     GraphicsItems/Curves/vector.h \
     GraphicsItems/Shapes/shape.h \
     GraphicsItems/graphicsitem.h \
+    Windows/MainWindow/MainWidgets/GraphicsView/graphicsview.h \
+    Windows/MainWindow/MainWidgets/GraphicsView/selection.h \
     Windows/MainWindow/MainWidgets/filewidget.h \
-    Windows/MainWindow/MainWidgets/graphicsview.h \
     Windows/MainWindow/MainWidgets/propertywidget.h \
     Windows/MainWindow/SubWidgets/colorsetter.h \
     Windows/MainWindow/SubWidgets/radiobuttongrid.h \

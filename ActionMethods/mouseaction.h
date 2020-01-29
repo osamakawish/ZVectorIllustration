@@ -10,7 +10,7 @@
 #include "mousebehaviour.h"
 #include "../GraphicsItems/graphicsitem.h"
 #include "../GraphicsItems/Curves/curve.h"
-#include "../Windows/MainWindow/MainWidgets/graphicsview.h"
+#include "../Windows/MainWindow/MainWidgets/GraphicsView/graphicsview.h"
 
 class QPainterPath; class QMouseEvent; class QPointF;
 class MainWindow; class QWidget; class QObject; class QGraphicsRectItem;
@@ -18,9 +18,12 @@ class Node; class Vector;
 
 class MouseAction
 {
+    // Need to move these to GraphicsView.
+    // Note: these are used to improve speed
     static QSet<Vector *> VectorsSelected;
     static QSet<Node *> NodesSelected;
     static QSet<Curve *> CurvesSelected;
+
     static void updateSelectionPath(QPointF p1, QPointF p2);
     static QGraphicsRectItem *selectionRect();
     static MainWindow *getMainWindow(QObject *w);

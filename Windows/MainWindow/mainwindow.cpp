@@ -10,7 +10,7 @@
 #include "ActionMethods/textaction.h"
 #include "ActionMethods/zoomaction.h"
 
-#include "MainWidgets/graphicsview.h"
+#include "MainWidgets/GraphicsView/graphicsview.h"
 
 //! @note Need to change all the triggered to toggled, and make sure to deal with cases where it's false.
 

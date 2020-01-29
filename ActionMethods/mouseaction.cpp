@@ -3,7 +3,7 @@
 #include <QDebug>
 
 #include "mouseaction.h"
-#include "../Windows/MainWindow/MainWidgets/graphicsview.h"
+#include "../Windows/MainWindow/MainWidgets/GraphicsView/graphicsview.h"
 #include "mousebehaviour.h"
 #include "../GraphicsItems/Curves/curve.h"
 #include "../GraphicsItems/graphicsitem.h"

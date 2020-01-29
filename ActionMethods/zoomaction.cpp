@@ -1,6 +1,6 @@
 #include "zoomaction.h"
 
-#include "../Windows/MainWindow/MainWidgets/graphicsview.h"
+#include "../Windows/MainWindow/MainWidgets/GraphicsView/graphicsview.h"
 
 const qreal ZoomAction::DefaultClickZoomRatio=1.2;
 const qreal ZoomAction::DefaultDoubleClickZoomRatio=1.25;

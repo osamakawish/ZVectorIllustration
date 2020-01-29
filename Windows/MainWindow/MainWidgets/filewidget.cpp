@@ -1,5 +1,5 @@
 #include "filewidget.h"
-#include "graphicsview.h"
+#include "GraphicsView/graphicsview.h"
 #include "ui_filewidget.h"
 #include <iostream>
 #include <set>

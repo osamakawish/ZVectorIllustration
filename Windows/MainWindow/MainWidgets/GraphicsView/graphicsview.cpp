@@ -10,8 +10,8 @@
 #include <limits>
 #include <QDebug>
 
-#include "../../../GraphicsItems/Curves/curve.h"
-#include "../../../GraphicsItems/Shapes/shape.h"
+#include "../../../../GraphicsItems/Curves/curve.h"
+#include "../../../../GraphicsItems/Shapes/shape.h"
 
 MouseEvent GraphicsView::Press = MouseAction::shapePress;
 MouseEvent GraphicsView::DoubleClick = MouseAction::shapeDoubleClick;
