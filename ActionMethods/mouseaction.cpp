@@ -97,12 +97,12 @@ void MouseAction::vectorPress(QMouseEvent *)
     // If nodes are selected, check if a vector is selected.
 }
 
-void MouseAction::vectorDoubleClick(QMouseEvent *e)
+void MouseAction::vectorDoubleClick(QMouseEvent *)
 {
     // If clicked in the middle of a curve, add a node that doesn't change its shape by much
 }
 
-void MouseAction::vectorMove(QMouseEvent *e)
+void MouseAction::vectorMove(QMouseEvent *)
 {
     move();
     // Node selection: move node
@@ -112,7 +112,7 @@ void MouseAction::vectorMove(QMouseEvent *e)
     // - if double clicked: all vectors have same relative position from their tails.
 }
 
-void MouseAction::vectorRelease(QMouseEvent *e)
+void MouseAction::vectorRelease(QMouseEvent *)
 {
     if (NodesSelected.isEmpty()) {release<Node>(NodesSelected); MouseBehaviour::view()->deselect();}
     else if (VectorsSelected.isEmpty()) {release<Vector>(VectorsSelected);}

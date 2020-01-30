@@ -33,10 +33,10 @@ void ZoomAction::shapeRelease(QMouseEvent *e)
 void ZoomAction::shapeToggle(bool toggle)
 {
     if (toggle) {
-        GraphicsView::Press = &ZoomAction::shapePress;
-        GraphicsView::DoubleClick = &ZoomAction::shapeDoubleClick;
-        GraphicsView::Move = &ZoomAction::shapeMove;
-        GraphicsView::Release = &ZoomAction::shapeRelease;
+        GraphicsView::PRESS = &ZoomAction::shapePress;
+        GraphicsView::DOUBLE_CLICK = &ZoomAction::shapeDoubleClick;
+        GraphicsView::MOVE = &ZoomAction::shapeMove;
+        GraphicsView::RELEASE = &ZoomAction::shapeRelease;
     }
     else {}
 }
@@ -64,10 +64,10 @@ void ZoomAction::vectorRelease(QMouseEvent *e)
 void ZoomAction::vectorToggle(bool toggle)
 {
     if (toggle) {
-        GraphicsView::Press = &ZoomAction::vectorPress;
-        GraphicsView::DoubleClick = &ZoomAction::vectorDoubleClick;
-        GraphicsView::Move = &ZoomAction::vectorMove;
-        GraphicsView::Release = &ZoomAction::vectorRelease;
+        GraphicsView::PRESS = &ZoomAction::vectorPress;
+        GraphicsView::DOUBLE_CLICK = &ZoomAction::vectorDoubleClick;
+        GraphicsView::MOVE = &ZoomAction::vectorMove;
+        GraphicsView::RELEASE = &ZoomAction::vectorRelease;
     }
     else {}
 }

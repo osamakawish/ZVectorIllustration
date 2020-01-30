@@ -25,10 +25,10 @@ void TextAction::shapeRelease(QMouseEvent *e)
 void TextAction::shapeToggle(bool toggle)
 {
     if (toggle) {
-        GraphicsView::Press = &TextAction::shapePress;
-        GraphicsView::DoubleClick = &TextAction::shapeDoubleClick;
-        GraphicsView::Move = &TextAction::shapeMove;
-        GraphicsView::Release = &TextAction::shapeRelease;
+        GraphicsView::PRESS = &TextAction::shapePress;
+        GraphicsView::DOUBLE_CLICK = &TextAction::shapeDoubleClick;
+        GraphicsView::MOVE = &TextAction::shapeMove;
+        GraphicsView::RELEASE = &TextAction::shapeRelease;
     }
     else {}
 }
@@ -56,10 +56,10 @@ void TextAction::vectorRelease(QMouseEvent *e)
 void TextAction::vectorToggle(bool toggle)
 {
     if (toggle) {
-        GraphicsView::Press = &TextAction::vectorPress;
-        GraphicsView::DoubleClick = &TextAction::vectorDoubleClick;
-        GraphicsView::Move = &TextAction::vectorMove;
-        GraphicsView::Release = &TextAction::vectorRelease;
+        GraphicsView::PRESS = &TextAction::vectorPress;
+        GraphicsView::DOUBLE_CLICK = &TextAction::vectorDoubleClick;
+        GraphicsView::MOVE = &TextAction::vectorMove;
+        GraphicsView::RELEASE = &TextAction::vectorRelease;
     }
     else {}
 }

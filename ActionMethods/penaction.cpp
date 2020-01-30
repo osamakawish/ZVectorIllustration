@@ -41,10 +41,10 @@ void PenAction::shapeRelease(QMouseEvent *)
 void PenAction::shapeToggle(bool toggle)
 {
     if (toggle) {
-        GraphicsView::Press = &PenAction::shapePress;
-        GraphicsView::DoubleClick = &PenAction::shapeDoubleClick;
-        GraphicsView::Move = &PenAction::shapeMove;
-        GraphicsView::Release = &PenAction::shapeRelease;
+        GraphicsView::PRESS = &PenAction::shapePress;
+        GraphicsView::DOUBLE_CLICK = &PenAction::shapeDoubleClick;
+        GraphicsView::MOVE = &PenAction::shapeMove;
+        GraphicsView::RELEASE = &PenAction::shapeRelease;
     }
     else {}
 }
@@ -85,10 +85,10 @@ void PenAction::vectorRelease(QMouseEvent *)
 void PenAction::vectorToggle(bool toggle)
 {
     if (toggle) {
-        GraphicsView::Press = &PenAction::vectorPress;
-        GraphicsView::DoubleClick = &PenAction::vectorDoubleClick;
-        GraphicsView::Move = &PenAction::vectorMove;
-        GraphicsView::Release = &PenAction::vectorRelease;
+        GraphicsView::PRESS = &PenAction::vectorPress;
+        GraphicsView::DOUBLE_CLICK = &PenAction::vectorDoubleClick;
+        GraphicsView::MOVE = &PenAction::vectorMove;
+        GraphicsView::RELEASE = &PenAction::vectorRelease;
     }
     else {resetCurve();}
 }

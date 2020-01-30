@@ -13,22 +13,22 @@
 #include "../../../../GraphicsItems/Curves/curve.h"
 #include "../../../../GraphicsItems/Shapes/shape.h"
 
-MouseEvent GraphicsView::Press = MouseAction::shapePress;
-MouseEvent GraphicsView::DoubleClick = MouseAction::shapeDoubleClick;
-MouseEvent GraphicsView::Move = MouseAction::shapeMove;
-MouseEvent GraphicsView::Release = MouseAction::shapeRelease;
+MouseEvent GraphicsView::PRESS = MouseAction::shapePress;
+MouseEvent GraphicsView::DOUBLE_CLICK = MouseAction::shapeDoubleClick;
+MouseEvent GraphicsView::MOVE = MouseAction::shapeMove;
+MouseEvent GraphicsView::RELEASE = MouseAction::shapeRelease;
 
 void GraphicsView::initialize()
 {
     setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
 
     setSceneRect(QRectF(0,0,200,400)); setBackgroundBrush(Qt::Dense6Pattern);
-    SheetRect = new QGraphicsRectItem(scene()->addRect(sceneRect(),QPen(),QBrush(Qt::white)));
-    SheetRect->setZValue(-std::numeric_limits<qreal>::max());
-    SelectionRect = new QGraphicsRectItem(scene()->addRect(QRectF()));
-    SelectionRect->setZValue(std::numeric_limits<qreal>::max());
-    SelectionRect->setPen(QPen(Qt::DashLine));
-    SelectionGroup = scene()->createItemGroup(QList<QGraphicsItem *>());
+    SHEET_RECT = new QGraphicsRectItem(scene()->addRect(sceneRect(),QPen(),QBrush(Qt::white)));
+    SHEET_RECT->setZValue(-std::numeric_limits<qreal>::max());
+    SELECTION_RECT = new QGraphicsRectItem(scene()->addRect(QRectF()));
+    SELECTION_RECT->setZValue(std::numeric_limits<qreal>::max());
+    SELECTION_RECT->setPen(QPen(Qt::DashLine));
+    SELECTION_GROUP = scene()->createItemGroup(QList<QGraphicsItem *>());
     setMouseTracking(true);
 
     test();
@@ -81,17 +81,19 @@ qreal GraphicsView::maxZValue(QList<QGraphicsItem *> items)
 void GraphicsView::selectAll(QList<QGraphicsItem *> items)
 { foreach (auto item, items) { dynamic_cast<Selectable *>(item)->select(); } }
 
-GraphicsView::GraphicsView(QWidget *parent) : QGraphicsView(parent)
-{ setScene(new QGraphicsScene); initialize(); }
+GraphicsView::GraphicsView(QWidget *parent)
+    : QGraphicsView(new QGraphicsScene,parent), SHAPE_CURVE_SELECTION(this)
+{ initialize(); }
 
-GraphicsView::GraphicsView(QGraphicsScene *scene, QWidget *parent) : QGraphicsView(scene,parent)
+GraphicsView::GraphicsView(QGraphicsScene *scene, QWidget *parent)
+    : QGraphicsView(scene,parent), SHAPE_CURVE_SELECTION(this)
 { initialize(); }
 
 GraphicsView::~GraphicsView()
 {
-    delete SelectionRect;
-    delete SheetRect;
-    scene()->destroyItemGroup(SelectionGroup);
+    delete SELECTION_RECT;
+    delete SHEET_RECT;
+    scene()->destroyItemGroup(SELECTION_GROUP);
 }
 
 QRectF GraphicsView::rectangle(const QPointF &p1, const QPointF &p2)
@@ -108,23 +110,23 @@ QRectF GraphicsView::rectangle(const QPointF &p1, const QPointF &p2)
 }
 
 void GraphicsView::mousePressEvent(QMouseEvent *e)
-{ MouseBehaviour::press(); Press(e); }
+{ MouseBehaviour::press(); PRESS(e); }
 
 void GraphicsView::mouseDoubleClickEvent(QMouseEvent *e)
-{ MouseBehaviour::doubleClick(); DoubleClick(e); }
+{ MouseBehaviour::doubleClick(); DOUBLE_CLICK(e); }
 
 void GraphicsView::mouseMoveEvent(QMouseEvent *e)
-{ MouseBehaviour::moveTo(e->globalPos()); Move(e); }
+{ MouseBehaviour::moveTo(e->globalPos()); MOVE(e); }
 
 void GraphicsView::mouseReleaseEvent(QMouseEvent *e)
-{ MouseBehaviour::release(); Release(e); }
+{ MouseBehaviour::release(); RELEASE(e); }
 
 QGraphicsRectItem *GraphicsView::selectionRect()
-{ return SelectionRect; }
+{ return SELECTION_RECT; }
 
 QList<QGraphicsItem *> GraphicsView::selectedItems()
-{ return SelectionGroup->childItems(); }
+{ return SELECTION_GROUP->childItems(); }
 
 void GraphicsView::deselect()
-{ scene()->destroyItemGroup(SelectionGroup); SelectionGroup = scene()->createItemGroup(QList<QGraphicsItem *>());
-SelectionRect->setRect(QRectF()); SelectionRect->hide(); }
+{ scene()->destroyItemGroup(SELECTION_GROUP); SELECTION_GROUP = scene()->createItemGroup(QList<QGraphicsItem *>());
+SELECTION_RECT->setRect(QRectF()); SELECTION_RECT->hide(); }

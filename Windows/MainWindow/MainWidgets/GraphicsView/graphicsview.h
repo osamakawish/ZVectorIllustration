@@ -7,6 +7,7 @@
 #include <QGraphicsView>
 
 #include "GraphicsItems/graphicsitem.h"
+#include "selection.h"
 
 class MouseAction;
 class PenAction;
@@ -19,9 +20,11 @@ typedef void (*MouseEvent)(QMouseEvent *);
 
 class GraphicsView : public QGraphicsView
 {
-    static MouseEvent Press, DoubleClick, Move, Release;
-    QGraphicsRectItem *SelectionRect; QGraphicsItemGroup *SelectionGroup;
-    QGraphicsRectItem *SheetRect;
+    static MouseEvent PRESS, DOUBLE_CLICK, MOVE, RELEASE;
+    QGraphicsRectItem *SELECTION_RECT; QGraphicsItemGroup *SELECTION_GROUP;
+    QGraphicsRectItem *SHEET_RECT;
+
+    SelectionShapeCurve SHAPE_CURVE_SELECTION;
 
     void initialize();
     void test();
@@ -72,9 +75,9 @@ public:
 
         if (std::is_base_of<Selectable,T>::value) { selectAll(items); } // Need to counter this with a deselectAll()
         else {
-        SelectionGroup = scene()->createItemGroup(items); SelectionGroup->setZValue(maxZValue(items));
-        SelectionRect->setRect(SelectionGroup->boundingRect()); SelectionRect->setZValue(std::numeric_limits<qreal>::max());
-        SelectionRect->show();
+        SELECTION_GROUP = scene()->createItemGroup(items); SELECTION_GROUP->setZValue(maxZValue(items));
+        SELECTION_RECT->setRect(SELECTION_GROUP->boundingRect()); SELECTION_RECT->setZValue(std::numeric_limits<qreal>::max());
+        SELECTION_RECT->show();
         }
     }
 
