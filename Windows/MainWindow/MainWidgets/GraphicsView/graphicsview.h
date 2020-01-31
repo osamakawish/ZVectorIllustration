@@ -34,18 +34,10 @@ public:
     GraphicsView(QGraphicsScene *scene, QWidget *parent = nullptr);
     ~GraphicsView();
 
-    static QRectF rectangle(const QPointF &p1, const QPointF &p2);
-
     void mousePressEvent(QMouseEvent *e) override;
     void mouseDoubleClickEvent(QMouseEvent *e) override;
     void mouseMoveEvent(QMouseEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *e) override;
-
-    QGraphicsRectItem *selectionRect();
-
-    QList<QGraphicsItem *> selectedItems();
-    void deselectNodesVectors();
-    void deselectAll(); // Need means to deselect nodes and vectors too.
 
     friend class MouseAction; friend class PenAction;
     friend class TextAction; friend class ZoomAction;

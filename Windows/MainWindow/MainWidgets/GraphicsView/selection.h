@@ -66,10 +66,9 @@ protected:
 public:
     //! A class for controlling selections and maintaining track for two of their distinct types.
     //! Must be declared after setting the scene for the view.
-    Selection(QGraphicsView *view)
-        : SCENE(view->scene())
+    Selection(QGraphicsView *view) : SCENE(view->scene())
     {
-        PATH = new QGraphicsRectItem; GROUP = new QGraphicsItemGroup;
+        PATH = new QGraphicsPathItem; GROUP = new QGraphicsItemGroup;
         SCENE->addItem(PATH); GROUP = SCENE->createItemGroup({}); PATH->hide();
         PATH->setZValue(std::numeric_limits<qreal>::max());
     }
@@ -90,7 +89,7 @@ public:
     { setPathRect(rect); }
     void setPath(QPainterPath path)
     { setPath(path); }
-    QGraphicsRectItem *rect() {return PATH;}
+    QGraphicsPathItem *path() {return PATH;}
     QGraphicsItemGroup *group() {return GROUP;}
 
     template<class R>

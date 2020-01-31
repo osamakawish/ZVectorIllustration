@@ -75,4 +75,4 @@ void Vector::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
 }
 
 QRectF Vector::boundingRect() const
-{ return GraphicsView::rectangle(Head,QPointF()); }
+{ return QRectF(Head,QPointF()).normalized(); }
