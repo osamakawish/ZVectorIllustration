@@ -11,7 +11,7 @@ bool PenAction::OnFirstPoint = true;
 
 void PenAction::updateCurrentNode()
 {
-    QPointF from = MouseBehaviour::pos(); QPointF to = MouseBehaviour::scenePos();
+    QPointF from = Mouse::pos(); QPointF to = Mouse::scenePos();
     Node *nd = CurrentCurve->selected();
     nd->inVector(2*from - to); nd->outVector(to);
     nd->showVectors();
@@ -19,7 +19,7 @@ void PenAction::updateCurrentNode()
 
 void PenAction::shapePress(QMouseEvent *)
 {
-    CurrentCurve = new Curve(MouseBehaviour::pos(),MouseBehaviour::view()->scene());
+    CurrentCurve = new Curve(Mouse::pos(),Mouse::view()->scene());
 }
 
 void PenAction::shapeDoubleClick(QMouseEvent *)
@@ -29,8 +29,8 @@ void PenAction::shapeDoubleClick(QMouseEvent *)
 
 void PenAction::shapeMove(QMouseEvent *)
 {
-    if (MouseBehaviour::isPressed())
-    CurrentCurve->add(MouseBehaviour::moved());
+    if (Mouse::isPressed())
+    CurrentCurve->add(Mouse::moved());
 }
 
 void PenAction::shapeRelease(QMouseEvent *)
@@ -58,9 +58,9 @@ void PenAction::vectorPress(QMouseEvent *)
 {
     // Create a new curve
     if (OnFirstPoint)
-    {CurrentCurve = new Curve(MouseBehaviour::pos(),MouseBehaviour::view()->scene());}
+    {CurrentCurve = new Curve(Mouse::pos(),Mouse::view()->scene());}
     else
-    {CurrentCurve->add(MouseBehaviour::pos());}
+    {CurrentCurve->add(Mouse::pos());}
 }
 
 void PenAction::vectorDoubleClick(QMouseEvent *)
@@ -70,7 +70,7 @@ void PenAction::vectorDoubleClick(QMouseEvent *)
 
 void PenAction::vectorMove(QMouseEvent *)
 {
-    if (MouseBehaviour::isPressed()) {
+    if (Mouse::isPressed()) {
         updateCurrentNode();
     }
 }

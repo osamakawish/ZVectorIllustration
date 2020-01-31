@@ -10,7 +10,7 @@ class GraphicsView; class QPoint; class QPointF; class QMouseEvent;
 
 #include <QPointF>
 
-namespace MouseBehaviour
+namespace Mouse
 {
     void setView(GraphicsView *view);
     GraphicsView *view(); QGraphicsScene *scene();

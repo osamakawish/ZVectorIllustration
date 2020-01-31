@@ -16,33 +16,17 @@ class QPainterPath; class QMouseEvent; class QPointF;
 class MainWindow; class QWidget; class QObject; class QGraphicsRectItem;
 class Node; class Vector;
 
+namespace {
+template<class S, class T>
+bool is_same() {return std::is_same<S,T>::value;}
+}
+
 class MouseAction
 {
-    // Need to move these to GraphicsView.
-    // Note: these are used to improve speed
-    static QSet<Vector *> VectorsSelected;
-    static QSet<Node *> NodesSelected;
-    static QSet<Curve *> CurvesSelected;
+    SelectionNodeVector &selectionNodeVector();
+    SelectionShapeCurve &selectionShapeCurve();
 
-    static void updateSelectionPath(QPointF p1, QPointF p2);
-    static QGraphicsRectItem *selectionRect();
     static MainWindow *getMainWindow(QObject *w);
-
-//    template<typename T>
-    static void press();
-    static void move();
-    template<typename S, typename T>
-    static void release(QSet<T *> &set)
-    {
-        if (!std::is_base_of<S,T>::value) {return;}
-        updateSelectionPath(MouseBehaviour::pos(),MouseBehaviour::scenePos());
-
-        auto view = MouseBehaviour::view(); view->select<S>(selectionRect()->rect());
-        auto items = view->selectedItems();
-
-        if (items.isEmpty()) { view->deselect(); set = {}; selectionRect()->hide(); }
-        else { foreach (auto item, items) { T *t = dynamic_cast<T *>(item); if (t) {set.insert(t);} } }
-    }
 
 public:
     static void shapePress(QMouseEvent *e);

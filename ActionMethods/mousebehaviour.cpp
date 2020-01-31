@@ -15,7 +15,7 @@ namespace {
     QGraphicsScene *Scene=nullptr;
 }
 
-void MouseBehaviour::setView(GraphicsView *v)
+void Mouse::setView(GraphicsView *v)
 {
     if (v == nullptr) return;
 
@@ -24,56 +24,56 @@ void MouseBehaviour::setView(GraphicsView *v)
     Move = scenePos();
 }
 
-GraphicsView *MouseBehaviour::view()
+GraphicsView *Mouse::view()
 { return View; }
 
-QGraphicsScene *MouseBehaviour::scene()
+QGraphicsScene *Mouse::scene()
 { return Scene; }
 
-void MouseBehaviour::press()
+void Mouse::press()
 { IsPressed = true; DClick = scenePos() - Click; Click += DClick; }
 
-void MouseBehaviour::doubleClick()
+void Mouse::doubleClick()
 { IsDoubleClicked = true; }
 
-QPointF MouseBehaviour::moved()
+QPointF Mouse::moved()
 { return Move; }
 
-void MouseBehaviour::rightClick()
+void Mouse::rightClick()
 { RightClicked = true; press(); }
 
-void MouseBehaviour::moveTo(QPoint pos)
+void Mouse::moveTo(QPoint pos)
 { DMove = pos - Move; Move = scenePos(pos); }
 
-void MouseBehaviour::move(QPoint dPos)
+void Mouse::move(QPoint dPos)
 { DMove = dPos; Move += DMove; }
 
-void MouseBehaviour::release()
+void Mouse::release()
 { IsPressed = false; IsDoubleClicked = false; RightClicked = false;
 DRelease = scenePos() - Release; Release = Release + DRelease; }
 
-bool MouseBehaviour::isPressed()
+bool Mouse::isPressed()
 { return IsPressed; }
 
-bool MouseBehaviour::isDoubleClicked()
+bool Mouse::isDoubleClicked()
 { return IsDoubleClicked; }
 
-QPointF MouseBehaviour::pos()
+QPointF Mouse::pos()
 { return Click; }
 
-QPointF MouseBehaviour::lastClickedPos()
+QPointF Mouse::lastClickedPos()
 { return Click - DClick; }
 
-QPointF MouseBehaviour::previousReleasedPos()
+QPointF Mouse::previousReleasedPos()
 { return Release - DRelease; }
 
-QPointF MouseBehaviour::scenePos()
+QPointF Mouse::scenePos()
 { return View->mapToScene(View->mapFromGlobal(QCursor::pos())); }
 
-QPointF MouseBehaviour::scenePos(QPoint p)
+QPointF Mouse::scenePos(QPoint p)
 { return View->mapToScene(View->mapFromGlobal(p)); }
 
-QPointF MouseBehaviour::scenePos(QMouseEvent *e)
+QPointF Mouse::scenePos(QMouseEvent *e)
 { return View->mapToScene(View->mapFrom(View,e->pos())); }
 
 //inline QPointF mapMousePosition(QMouseEvent *e)

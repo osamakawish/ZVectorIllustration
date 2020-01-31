@@ -25,13 +25,9 @@ void GraphicsView::initialize()
     setSceneRect(QRectF(0,0,200,400)); setBackgroundBrush(Qt::Dense6Pattern);
     SHEET_RECT = new QGraphicsRectItem(scene()->addRect(sceneRect(),QPen(),QBrush(Qt::white)));
     SHEET_RECT->setZValue(-std::numeric_limits<qreal>::max());
-    SELECTION_RECT = new QGraphicsRectItem(scene()->addRect(QRectF()));
-    SELECTION_RECT->setZValue(std::numeric_limits<qreal>::max());
-    SELECTION_RECT->setPen(QPen(Qt::DashLine));
-    SELECTION_GROUP = scene()->createItemGroup(QList<QGraphicsItem *>());
     setMouseTracking(true);
 
-    test();
+//    test();
 }
 
 void GraphicsView::test()
@@ -58,43 +54,16 @@ void GraphicsView::test()
     c->showNodes(); c->showVectors();
 }
 
-qreal GraphicsView::minZValue(QList<QGraphicsItem *> items)
-{
-    qreal min = std::numeric_limits<double>::max();
-    foreach (auto item, items) {
-        qreal n = item->zValue();
-        if (n < min) min = n;
-    }
-    return min;
-}
-
-qreal GraphicsView::maxZValue(QList<QGraphicsItem *> items)
-{
-    qreal max = std::numeric_limits<double>::min();
-    foreach (auto item, items) {
-        qreal n = item->zValue();
-        if (n > max) max = n;
-    }
-    return max;
-}
-
-void GraphicsView::selectAll(QList<QGraphicsItem *> items)
-{ foreach (auto item, items) { dynamic_cast<Selectable *>(item)->select(); } }
-
-GraphicsView::GraphicsView(QWidget *parent)
-    : QGraphicsView(new QGraphicsScene,parent), SHAPE_CURVE_SELECTION(this)
+GraphicsView::GraphicsView(QWidget *parent) : QGraphicsView(new QGraphicsScene,parent),
+    SHAPE_CURVE_SELECTION(this), NODE_VECTOR_SELECTION(this)
 { initialize(); }
 
-GraphicsView::GraphicsView(QGraphicsScene *scene, QWidget *parent)
-    : QGraphicsView(scene,parent), SHAPE_CURVE_SELECTION(this)
+GraphicsView::GraphicsView(QGraphicsScene *scene, QWidget *parent) : QGraphicsView(scene,parent),
+    SHAPE_CURVE_SELECTION(this), NODE_VECTOR_SELECTION(this)
 { initialize(); }
 
 GraphicsView::~GraphicsView()
-{
-    delete SELECTION_RECT;
-    delete SHEET_RECT;
-    scene()->destroyItemGroup(SELECTION_GROUP);
-}
+{ delete SHEET_RECT; }
 
 QRectF GraphicsView::rectangle(const QPointF &p1, const QPointF &p2)
 {
@@ -110,23 +79,25 @@ QRectF GraphicsView::rectangle(const QPointF &p1, const QPointF &p2)
 }
 
 void GraphicsView::mousePressEvent(QMouseEvent *e)
-{ MouseBehaviour::press(); PRESS(e); }
+{ Mouse::press(); PRESS(e); }
 
 void GraphicsView::mouseDoubleClickEvent(QMouseEvent *e)
-{ MouseBehaviour::doubleClick(); DOUBLE_CLICK(e); }
+{ Mouse::doubleClick(); DOUBLE_CLICK(e); }
 
 void GraphicsView::mouseMoveEvent(QMouseEvent *e)
-{ MouseBehaviour::moveTo(e->globalPos()); MOVE(e); }
+{ Mouse::moveTo(e->globalPos()); MOVE(e); }
 
 void GraphicsView::mouseReleaseEvent(QMouseEvent *e)
-{ MouseBehaviour::release(); RELEASE(e); }
+{ Mouse::release(); RELEASE(e); }
 
 QGraphicsRectItem *GraphicsView::selectionRect()
-{ return SELECTION_RECT; }
+{ return SHAPE_CURVE_SELECTION.rect(); }
 
 QList<QGraphicsItem *> GraphicsView::selectedItems()
-{ return SELECTION_GROUP->childItems(); }
+{ return SHAPE_CURVE_SELECTION.group()->childItems(); }
 
-void GraphicsView::deselect()
-{ scene()->destroyItemGroup(SELECTION_GROUP); SELECTION_GROUP = scene()->createItemGroup(QList<QGraphicsItem *>());
-SELECTION_RECT->setRect(QRectF()); SELECTION_RECT->hide(); }
+void GraphicsView::deselectNodesVectors()
+{ NODE_VECTOR_SELECTION.resetSelection(); }
+
+void GraphicsView::deselectAll()
+{ NODE_VECTOR_SELECTION.resetSelection(); SHAPE_CURVE_SELECTION.resetSelection(); }

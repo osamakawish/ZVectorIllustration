@@ -17,7 +17,7 @@ FileWidget::FileWidget(QWidget *parent) :
     newFile();
     // Update MouseBehaviour view when tab changes.
     connect(ui->tabWidget,&QTabWidget::currentChanged,this,[&](){
-        MouseBehaviour::setView(dynamic_cast<GraphicsView *>(ui->tabWidget->currentWidget()));
+        Mouse::setView(dynamic_cast<GraphicsView *>(ui->tabWidget->currentWidget()));
     });
 
     delete ui->tabWidget->widget(0);

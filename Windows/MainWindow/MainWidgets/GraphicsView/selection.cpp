@@ -13,7 +13,7 @@ void SelectionNodeVector::selectS(Node *nd)
 void SelectionNodeVector::selectT(Vector *vector)
 { vector->select(); }
 
-void SelectionNodeVector::updateSelectionRect() { RECT->hide(); }
+void SelectionNodeVector::finalizePath() { PATH->hide(); }
 
 SelectionShapeCurve::SelectionShapeCurve(QGraphicsView *view) : Selection<Shape, Curve>(view)
 { setRectPen(Qt::DashLine); setRectBrush(Qt::transparent); }
@@ -27,4 +27,4 @@ void SelectionShapeCurve::selectT(Curve *curve) { curve->showNodes(); }
 void SelectionShapeCurve::showNodes()
 { auto it = T_ITEMS.begin(); while (it != T_ITEMS.end()) {(*it)->showNodes(); it++;} }
 
-void SelectionShapeCurve::updateSelectionRect() {}
+void SelectionShapeCurve::finalizePath() { setPathRect(PATH->path().controlPointRect()); }
