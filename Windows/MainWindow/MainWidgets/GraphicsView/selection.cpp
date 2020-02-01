@@ -7,10 +7,10 @@ SelectionNodeVector::SelectionNodeVector(QGraphicsView *view) : Selection<Node, 
 
 SelectionNodeVector::~SelectionNodeVector() {}
 
-void SelectionNodeVector::selectS(Node *nd)
+void SelectionNodeVector::select(Node *nd)
 { nd->select(); nd->showVectors(); }
 
-void SelectionNodeVector::selectT(Vector *vector)
+void SelectionNodeVector::select(Vector *vector)
 { vector->select(); }
 
 // Select all nodes and vectors.
@@ -21,9 +21,9 @@ SelectionShapeCurve::SelectionShapeCurve(QGraphicsView *view) : Selection<Shape,
 
 SelectionShapeCurve::~SelectionShapeCurve() {}
 
-void SelectionShapeCurve::selectS(Shape *) {}
+void SelectionShapeCurve::select(Shape *) {}
 
-void SelectionShapeCurve::selectT(Curve *curve) { curve->showNodes(); }
+void SelectionShapeCurve::select(Curve *curve) { curve->showNodes(); }
 
 void SelectionShapeCurve::showNodes()
 { auto it = T_ITEMS.begin(); while (it != T_ITEMS.end()) {(*it)->showNodes(); it++;} }

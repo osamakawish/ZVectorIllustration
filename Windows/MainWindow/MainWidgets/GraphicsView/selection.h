@@ -52,13 +52,8 @@ protected:
     QGraphicsPathItem *PATH;
     QGraphicsItemGroup *GROUP;
 
-    virtual void selectS(S *item)=0;
-    virtual void selectT(T *item)=0;
-
-    template<class R> void select(R *item)
-    {auto s = dynamic_cast<S *>(item); if (s) {selectS(s);}
-    auto t = dynamic_cast<S *>(item); if (t) {selectT(t);}
-    GROUP->addToGroup(item);}
+    virtual void select(S *item)=0;
+    virtual void select(T *item)=0;
 
     //! Only need to account for any unexpected changes into selection rect.
     //! Resizing when an item is added is not necessary.
@@ -69,7 +64,7 @@ protected:
     template<class R> void insert(QSet<R *> &items, QGraphicsItem *item, qreal &z, bool condition)
     {
         if (!condition) {return;} R *r = dynamic_cast<R *>(item);
-        if (r) { items.insert(r); GROUP->addToGroup(r); qreal Z = item->zValue(); if (Z > z) {z=Z;} }
+        if (r) { items.insert(r); GROUP->addToGroup(r); select(r); qreal Z = item->zValue(); if (Z > z) {z=Z;} }
     }
 
     //! Distributes items based on whether they are of type S or T.
@@ -166,8 +161,8 @@ public:
     SelectionNodeVector(QGraphicsView *view);
     ~SelectionNodeVector();
 
-    void selectS(Node *item) override;
-    void selectT(Vector *item) override;
+    void select(Node *item) override;
+    void select(Vector *item) override;
 
 protected:
     void finalizePath() override;
@@ -181,8 +176,8 @@ public:
     SelectionShapeCurve(QGraphicsView *view);
     ~SelectionShapeCurve();
 
-    void selectS(Shape *item) override;
-    void selectT(Curve *item) override;
+    void select(Shape *item) override;
+    void select(Curve *item) override;
 
     void showNodes();
 
