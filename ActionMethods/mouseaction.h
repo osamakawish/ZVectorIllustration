@@ -14,7 +14,7 @@
 
 class QPainterPath; class QMouseEvent; class QPointF;
 class MainWindow; class QWidget; class QObject; class QGraphicsRectItem;
-class Node; class Vector;
+class Node; class Vector; class FileWidget;
 
 namespace {
 template<class S, class T>
@@ -23,8 +23,9 @@ bool is_same() {return std::is_same<S,T>::value;}
 
 class MouseAction
 {
-    SelectionNodeVector &selectionNodeVector();
-    SelectionShapeCurve &selectionShapeCurve();
+    static SelectionNodeVector *NODE_VECTOR_SELECTION;
+    static SelectionShapeCurve *SHAPE_CURVE_SELECTION;
+    friend class FileWidget;
 
     static MainWindow *getMainWindow(QObject *w);
 
@@ -35,7 +36,6 @@ public:
     static void shapeRelease(QMouseEvent *e);
     static void shapeToggle(bool toggle);
 
-    static void resetCurve();
     static void vectorPress(QMouseEvent *e);
     static void vectorDoubleClick(QMouseEvent *e);
     static void vectorMove(QMouseEvent *e);

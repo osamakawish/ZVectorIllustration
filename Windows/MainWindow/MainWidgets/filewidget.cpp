@@ -7,6 +7,15 @@
 #include <QDebug>
 
 #include "ActionMethods/mousebehaviour.h"
+#include "ActionMethods/mouseaction.h"
+
+void FileWidget::tabChange(int index)
+{
+    GraphicsView *view = dynamic_cast<GraphicsView *>(ui->tabWidget->widget(index));
+    Mouse::setView(view);
+    MouseAction::NODE_VECTOR_SELECTION = &view->NODE_VECTOR_SELECTION;
+    MouseAction::SHAPE_CURVE_SELECTION = &view->SHAPE_CURVE_SELECTION;
+}
 
 FileWidget::FileWidget(QWidget *parent) :
     QWidget(parent),
@@ -16,9 +25,7 @@ FileWidget::FileWidget(QWidget *parent) :
 
     newFile();
     // Update MouseBehaviour view when tab changes.
-    connect(ui->tabWidget,&QTabWidget::currentChanged,this,[&](){
-        Mouse::setView(dynamic_cast<GraphicsView *>(ui->tabWidget->currentWidget()));
-    });
+    connect(ui->tabWidget,&QTabWidget::currentChanged,this,&FileWidget::tabChange);
 
     delete ui->tabWidget->widget(0);
 }

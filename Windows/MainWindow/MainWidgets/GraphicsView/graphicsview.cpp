@@ -27,13 +27,15 @@ void GraphicsView::initialize()
     SHEET_RECT->setZValue(-std::numeric_limits<qreal>::max());
     setMouseTracking(true);
 
-//    test();
+    test();
 }
 
 void GraphicsView::test()
 {
     Ellipse *ellipse = new Ellipse(QRectF(20,20,100,200)); scene()->addItem(ellipse);
-    scene()->addRect(20,20,100,200);
+    qDebug() << "ellipse" << ellipse;
+    auto rect = scene()->addRect(20,20,100,200);
+    qDebug() << "rect" << rect;
 
     ellipse->setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable);
     ellipse->setZValue(20);
@@ -76,4 +78,11 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *e)
 
 void GraphicsView::mouseReleaseEvent(QMouseEvent *e)
 { Mouse::release(); RELEASE(e); }
+
+void GraphicsView::debug()
+{
+    auto it = items().begin();
+    while (it != items().end())
+    { qDebug() << *it << (*it)->zValue() << endl; }
+}
 

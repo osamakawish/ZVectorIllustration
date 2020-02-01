@@ -3,7 +3,7 @@
 #include "GraphicsItems/Curves/curve.h"
 
 SelectionNodeVector::SelectionNodeVector(QGraphicsView *view) : Selection<Node, Vector>(view)
-{ setRectPen(Qt::transparent); setRectBrush(QColor(0,0,0,32)); }
+{ PEN = QPen(Qt::transparent); BRUSH = QBrush(QColor(0,0,0,16)); }
 
 SelectionNodeVector::~SelectionNodeVector() {}
 
@@ -13,10 +13,11 @@ void SelectionNodeVector::selectS(Node *nd)
 void SelectionNodeVector::selectT(Vector *vector)
 { vector->select(); }
 
+// Select all nodes and vectors.
 void SelectionNodeVector::finalizePath() { PATH->hide(); }
 
 SelectionShapeCurve::SelectionShapeCurve(QGraphicsView *view) : Selection<Shape, Curve>(view)
-{ setRectPen(Qt::DashLine); setRectBrush(Qt::transparent); }
+{ PEN = QPen(Qt::DashLine); BRUSH = QBrush(Qt::transparent); }
 
 SelectionShapeCurve::~SelectionShapeCurve() {}
 

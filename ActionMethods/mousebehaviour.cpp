@@ -82,3 +82,6 @@ QPointF Mouse::scenePos(QMouseEvent *e)
 //{ return mapToScene(mapFromGlobal(pos)); }
 //inline QPointF mouseViewPosition()
 //{ return mapMousePosition(QCursor::pos()); }
+
+QPointF Mouse::releasePos()
+{ return Release; }

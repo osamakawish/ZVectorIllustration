@@ -39,9 +39,13 @@ public:
     void mouseMoveEvent(QMouseEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *e) override;
 
+    void debug();
+
     friend class MouseAction; friend class PenAction;
     friend class TextAction; friend class ZoomAction;
     friend class MainWindow;
+
+    friend class FileWidget;
 };
 
 #endif // GRAPHICSVIEW_H

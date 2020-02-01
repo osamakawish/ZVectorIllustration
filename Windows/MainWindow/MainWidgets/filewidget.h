@@ -12,6 +12,8 @@ class FileWidget : public QWidget
 {
     Q_OBJECT
 
+    void tabChange(int index);
+
 public:
     explicit FileWidget(QWidget *parent = nullptr);
     ~FileWidget();
