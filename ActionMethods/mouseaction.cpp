@@ -24,10 +24,10 @@ MainWindow *MouseAction::getMainWindow(QObject *w)
 }
 
 void MouseAction::shapePress(QMouseEvent *)
-{ SHAPE_CURVE_SELECTION->startPath(Mouse::pos().toPoint()); SHAPE_CURVE_SELECTION->updateAsPath(); }
+{ SHAPE_CURVE_SELECTION->updateAsPath(); SHAPE_CURVE_SELECTION->startPath(Mouse::pos().toPoint()); }
 
 void MouseAction::shapeDoubleClick(QMouseEvent *)
-{ SHAPE_CURVE_SELECTION->updateAsPath(true); }
+{ SHAPE_CURVE_SELECTION->updateAsPath(true); SHAPE_CURVE_SELECTION->startPath(Mouse::pos().toPoint()); }
 
 void MouseAction::shapeMove(QMouseEvent *)
 {
@@ -36,7 +36,7 @@ void MouseAction::shapeMove(QMouseEvent *)
 }
 
 void MouseAction::shapeRelease(QMouseEvent *)
-{ SHAPE_CURVE_SELECTION->finalize(Mouse::releasePos().toPoint());  }
+{ SHAPE_CURVE_SELECTION->finalize(Mouse::releasePos().toPoint()); }
 
 void MouseAction::shapeToggle(bool toggle)
 {

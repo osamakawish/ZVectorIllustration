@@ -30,6 +30,13 @@ There are the following cases of mouse events, enumerated for
 
 ## Current Errors
 
+The errors are likely a result of misunderstanding how the code works during a double click:
+
+1. Mouse Pressed (Press = true)
+2. Release (Press = false)
+3. Double Click (Press is false)
+4. Release
+
 Double clicking on a `selection rect` with selected items seems to treat old selection rect as a new one.
 
 > **Resolve:** ~~Not sure what's causing the bug. Not too serious anyways. We can try to `qDebug()` all over the code to see whether it skips an expected step.~~

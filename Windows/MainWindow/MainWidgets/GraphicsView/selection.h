@@ -35,12 +35,13 @@ class Selection
     void closePath() {QPainterPath path = PATH->path(); path.closeSubpath(); PATH->setPath(path);}
 
     //! Called when mouse is released.
+    // Bug must be at or after gathering items
     void finalize_(QPoint pt)
-    { closePath(); (this->*PATH_DRAW)(pt); auto items = SCENE->items(PATH->path()); gather(items); amendPath(); finalizePath(); }
+    { closePath(); (this->*PATH_DRAW)(pt); auto items = SCENE->items(PATH->path()); gather(items); amendPath(); }
     void finalize_S(QPoint pt)
-    { closePath(); (this->*PATH_DRAW)(pt); auto items = SCENE->items(PATH->path()); gather(items,true,false); amendPath(); finalizePath(); }
+    { closePath(); (this->*PATH_DRAW)(pt); auto items = SCENE->items(PATH->path()); gather(items,true,false); amendPath(); }
     void finalize_T(QPoint pt)
-    { closePath(); (this->*PATH_DRAW)(pt); auto items = SCENE->items(PATH->path()); gather(items,false); amendPath(); finalizePath(); }
+    { closePath(); (this->*PATH_DRAW)(pt); auto items = SCENE->items(PATH->path()); gather(items,false); amendPath(); }
 
 protected:
     QSet<S *> S_ITEMS = {};
@@ -116,7 +117,7 @@ public:
     void resetGroup() {SCENE->destroyItemGroup(GROUP); GROUP = SCENE->createItemGroup({});}
     void resetPath() {PATH->setPath(QPainterPath()); PATH->hide();}
     void amendPath()
-    { if (GROUP->childItems().isEmpty()) {resetSelection();} else {setPathRect(GROUP->boundingRect());}}
+    { if (GROUP->childItems().isEmpty()) {resetSelection();} else {setPathRect(GROUP->boundingRect()); finalizePath();}}
 
     // public
     void clearS()
