@@ -33,11 +33,7 @@ void GraphicsView::initialize()
 void GraphicsView::test()
 {
     Ellipse *ellipse = new Ellipse(QRectF(20,20,100,200)); scene()->addItem(ellipse);
-    qDebug() << "ellipse" << ellipse;
-    auto rect = scene()->addRect(20,20,100,200);
-    qDebug() << "rect" << rect;
-
-    ellipse->setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable);
+    scene()->addRect(20,20,100,200);
     ellipse->setZValue(20);
 
     // Vector Test

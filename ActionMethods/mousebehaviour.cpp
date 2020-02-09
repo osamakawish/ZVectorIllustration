@@ -43,9 +43,9 @@ void Mouse::rightClick()
 { RightClicked = true; press(); }
 
 void Mouse::moveTo(QPoint pos)
-{ DMove = pos - Move; Move = scenePos(pos); }
+{ DMove = scenePos(pos) - Move; Move = Move + DMove; }
 
-void Mouse::move(QPoint dPos)
+void Mouse::moveBy(QPoint dPos)
 { DMove = dPos; Move += DMove; }
 
 void Mouse::release()
@@ -76,12 +76,8 @@ QPointF Mouse::scenePos(QPoint p)
 QPointF Mouse::scenePos(QMouseEvent *e)
 { return View->mapToScene(View->mapFrom(View,e->pos())); }
 
-//inline QPointF mapMousePosition(QMouseEvent *e)
-//{ return mapToScene(mapFrom(this,e->pos())); }
-//inline QPointF mapMousePosition(QPoint pos)
-//{ return mapToScene(mapFromGlobal(pos)); }
-//inline QPointF mouseViewPosition()
-//{ return mapMousePosition(QCursor::pos()); }
-
 QPointF Mouse::releasePos()
 { return Release; }
+
+QPointF Mouse::movedBy()
+{ return DMove; }

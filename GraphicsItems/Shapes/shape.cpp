@@ -3,8 +3,14 @@
 #include <QPainter>
 #include <QGraphicsScene>
 
+void Shape::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+{ painter->setPen(PEN); painter->setBrush(BRUSH); paint(painter); }
+
 Shape::Shape(QGraphicsItem *parent) : Drawable(parent)
-{}
+{
+    PEN.setCosmetic(true);
+    setFlags(GraphicsItemFlag::ItemIsMovable | GraphicsItemFlag::ItemIsSelectable);
+}
 
 Shape::~Shape()
 {}
@@ -22,7 +28,7 @@ Ellipse::Ellipse(qreal x, qreal y, qreal width, qreal height, QGraphicsItem *par
 Ellipse::~Ellipse()
 {}
 
-void Ellipse::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+void Ellipse::paint(QPainter *painter)
 { painter->drawEllipse(QRectF(-w,-h,2*w,2*h).normalized()); }
 
 QRectF Ellipse::boundingRect() const

@@ -11,6 +11,9 @@ class GraphicsItem : public QAbstractGraphicsShapeItem
 {
 public:
     GraphicsItem(QGraphicsItem *parent=nullptr);
+
+    void scale(QPointF factor);
+
     virtual ~GraphicsItem();
 };
 

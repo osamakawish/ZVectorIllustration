@@ -17,10 +17,10 @@ namespace Mouse
 
     void press(); void doubleClick(); QPointF moved();
     void rightClick(); void moveTo(QPoint pos);
-    void move(QPoint dPos); void release();
+    void moveBy(QPoint dPos); void release();
 
     bool isPressed(); bool isDoubleClicked();
-    QPointF pos(); QPointF releasePos();
+    QPointF pos(); QPointF movedBy(); QPointF releasePos();
     QPointF lastClickedPos(); QPointF previousReleasedPos();
     QPointF scenePos(); QPointF scenePos(QPoint p);
     QPointF scenePos(QMouseEvent *e);

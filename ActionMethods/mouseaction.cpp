@@ -23,20 +23,42 @@ MainWindow *MouseAction::getMainWindow(QObject *w)
     return (window) ? (window) : (getMainWindow(parent));
 }
 
+// Resetting the selection rect has bugs.
 void MouseAction::shapePress(QMouseEvent *)
-{ SHAPE_CURVE_SELECTION->updateAsPath(); SHAPE_CURVE_SELECTION->startPath(Mouse::pos().toPoint()); }
+{
+    // Want to show transform buttons when the selection is shown.
+    if (!SHAPE_CURVE_SELECTION->setTransform(Mouse::pos()))
+    {
+        qDebug() << 3 << Mouse::scenePos() << Mouse::pos();
+        SHAPE_CURVE_SELECTION->updateAsPath(); SHAPE_CURVE_SELECTION->startPath(Mouse::pos());
+    }
+}
 
 void MouseAction::shapeDoubleClick(QMouseEvent *)
-{ SHAPE_CURVE_SELECTION->updateAsPath(true); SHAPE_CURVE_SELECTION->startPath(Mouse::pos().toPoint()); }
+{
+    SHAPE_CURVE_SELECTION->updateAsPath(true); SHAPE_CURVE_SELECTION->startPath(Mouse::pos());
+}
 
 void MouseAction::shapeMove(QMouseEvent *)
 {
     if (Mouse::isPressed())
-    {SHAPE_CURVE_SELECTION->updateSelection(Mouse::moved().toPoint());}
+    {
+        if (SHAPE_CURVE_SELECTION->shouldTransform())
+        {SHAPE_CURVE_SELECTION->transform(Mouse::movedBy());}
+        else
+        {SHAPE_CURVE_SELECTION->updateSelection(Mouse::moved());}
+    }
 }
 
 void MouseAction::shapeRelease(QMouseEvent *)
-{ SHAPE_CURVE_SELECTION->finalize(Mouse::releasePos().toPoint()); }
+{
+    // Bugs occur in case where nothing is selected after moving a selected object.
+    // Need to figure out what happens to selection rect.
+    if (SHAPE_CURVE_SELECTION->shouldTransform())// Need to reset transform option in this case.
+    {SHAPE_CURVE_SELECTION->transform(Mouse::movedBy());}
+    else // When nothing is selected, selection should hide buttons.
+    {SHAPE_CURVE_SELECTION->finalize(Mouse::releasePos()); }
+}
 
 void MouseAction::shapeToggle(bool toggle)
 {
@@ -53,23 +75,24 @@ void MouseAction::shapeToggle(bool toggle)
 
 void MouseAction::vectorPress(QMouseEvent *)
 {
-    NODE_VECTOR_SELECTION->startPath(Mouse::pos().toPoint()); NODE_VECTOR_SELECTION->updateAsPath();
+    NODE_VECTOR_SELECTION->updateAsPath(); NODE_VECTOR_SELECTION->startPath(Mouse::pos());
 }
 
 void MouseAction::vectorDoubleClick(QMouseEvent *)
 {
     NODE_VECTOR_SELECTION->setFinalizeOption(FinalizeOption::T_ONLY);
+    NODE_VECTOR_SELECTION->startPath(Mouse::pos());
 }
 
 void MouseAction::vectorMove(QMouseEvent *)
 {
     if (Mouse::isPressed())
-    { NODE_VECTOR_SELECTION->updateSelection(Mouse::moved().toPoint()); }
+    { NODE_VECTOR_SELECTION->updateSelection(Mouse::moved()); }
 }
 
 void MouseAction::vectorRelease(QMouseEvent *)
 {
-    NODE_VECTOR_SELECTION->finalize(Mouse::releasePos().toPoint());
+    NODE_VECTOR_SELECTION->finalize(Mouse::releasePos());
 }
 
 void MouseAction::vectorToggle(bool toggle)

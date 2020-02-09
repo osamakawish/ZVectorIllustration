@@ -4,8 +4,15 @@
 #include "../graphicsitem.h"
 
 class Shape : public Drawable {
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
+
+protected:
+    QPen PEN; QBrush BRUSH;
+
 public:
     Shape(QGraphicsItem *parent=nullptr);
+
+    virtual void paint(QPainter *painter)=0;
     virtual ~Shape();
 };
 
@@ -18,7 +25,7 @@ public:
     Ellipse(qreal w, qreal h, qreal width, qreal height, QGraphicsItem *parent = nullptr);
     ~Ellipse();
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
+    void paint(QPainter *painter) override;
     QRectF boundingRect() const override;
 
     operator QGraphicsEllipseItem *();

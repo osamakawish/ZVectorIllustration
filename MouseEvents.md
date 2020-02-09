@@ -28,7 +28,7 @@ There are the following cases of mouse events, enumerated for
    2. Vectors selected
       1. Mouse moved: Vector heads
 
-## Current Errors
+## Typical Causes for Error
 
 The errors are likely a result of misunderstanding how the code works during a double click:
 
@@ -37,14 +37,41 @@ The errors are likely a result of misunderstanding how the code works during a d
 3. Double Click (Press is false)
 4. Release
 
-Double clicking on a `selection rect` with selected items seems to treat old selection rect as a new one.
+## Current Goal
 
-> **Resolve:** ~~Not sure what's causing the bug. Not too serious anyways. We can try to `qDebug()` all over the code to see whether it skips an expected step.~~
->
-> Actually, more serious than I thought. The problem persists when nothing is clicked.
+### Transformations of Selected Items
 
-Nodes not selecting during node/vector selection.
+The cleanest and nicest way to do this, after considering various possibilities, is this:
 
-> Really haven't tried anything yet on this.
->
-> **Resolve:** 
+```c++
+template<class S, class T>
+class Selection {
+    typedef QGraphicsItem TransformButton;
+    typedef void (Selection::*Transform)(QPoint);
+    // NOTE: Move selection rect to 1 less than max numeric value, and these to max.
+    QSet<TransformButton *> SCALE_BUTTONS; TransformButton *MOVE_BUTTON;
+    TransformButton *SELECTED_BUTTON;
+    Transform TRANSFORM_BY;
+    
+    ...
+    
+    // True if item is to be transformed, and prepares transformation, false otherwise.
+    // Transforms if the item clicks a transform button.
+    bool setTransform(QPoint pt) {
+        QGraphicsItem *item = SCENE.item(pt);
+        if (SCALE_BUTTONS.keys().contains(item)) 
+        { SELECTED_BUTTON = item; TRANSFORM_BY = &Selection::rescaleBy; return true; }
+        else if (item == MOVE_BUTTON) 
+        { SELECTED_BUTTON = item; TRANSFORM_BY = &Selection::moveBy; return true; }
+        else { SELECTED_BUTTON = nullptr; return false; }
+    }
+    bool shouldTransform() {return SELECTED_BUTTON != nullptr;}
+    void rescaleBy(QPoint) { ... }
+    void moveBy(QPoint) { ... }
+    void transformBy(QPoint pt) {(this->*TRANSFORM)(pt);}
+    
+    ...
+    
+}
+```
+

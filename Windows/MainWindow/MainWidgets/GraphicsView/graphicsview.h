@@ -20,6 +20,8 @@ typedef void (*MouseEvent)(QMouseEvent *);
 
 class GraphicsView : public QGraphicsView
 {
+    QPen testPen;
+
     static MouseEvent PRESS, DOUBLE_CLICK, MOVE, RELEASE;
     QGraphicsRectItem *SHEET_RECT;
 

@@ -6,6 +6,7 @@
 #include <QDebug>
 
 #include <QSet>
+#include <QGraphicsItem>
 #include <QGraphicsItemGroup>
 #include <QGraphicsView>
 #include <QGraphicsPathItem>
@@ -20,30 +21,31 @@ enum class FinalizeOption { S_ONLY, T_ONLY, BOTH };
 template<class S, class T>
 class Selection
 {
-    typedef void (Selection::*PathUpdate)(QPoint);
-    typedef void (Selection::*Finalize)(QPoint);
+    // For selecting objects
+    typedef void (Selection::*PathUpdate)(QPointF);
+    typedef void (Selection::*Finalize)(QPointF);
     typedef void (Selection::*Gather)(QList<QGraphicsItem *>);
 
-    QPoint start;
-    PathUpdate PATH_DRAW;
-    Finalize FINALIZE;
-    QGraphicsScene *SCENE;
-
-    void updateRect(QPoint pt) {QPainterPath path; path.addRect(QRect(start,pt)); PATH->setPath(path);}
-    void updatePath(QPoint pt) {QPainterPath path = PATH->path(); path.lineTo(pt); PATH->setPath(path);}
+    void updateRect(QPointF pt) {QPainterPath path; path.addRect(QRectF(START,pt)); PATH->setPath(path);}
+    void updatePath(QPointF pt) {QPainterPath path = PATH->path(); path.lineTo(pt); PATH->setPath(path);}
 
     void closePath() {QPainterPath path = PATH->path(); path.closeSubpath(); PATH->setPath(path);}
 
     //! Called when mouse is released.
-    // Bug must be at or after gathering items
-    void finalize_(QPoint pt)
+    // Need to hide selection buttons when deselecting.
+    void finalize_(QPointF pt)
     { closePath(); (this->*PATH_DRAW)(pt); auto items = SCENE->items(PATH->path()); gather(items); amendPath(); }
-    void finalize_S(QPoint pt)
+    void finalize_S(QPointF pt)
     { closePath(); (this->*PATH_DRAW)(pt); auto items = SCENE->items(PATH->path()); gather(items,true,false); amendPath(); }
-    void finalize_T(QPoint pt)
+    void finalize_T(QPointF pt)
     { closePath(); (this->*PATH_DRAW)(pt); auto items = SCENE->items(PATH->path()); gather(items,false); amendPath(); }
 
 protected:
+    QPointF START;
+    PathUpdate PATH_DRAW;
+    Finalize FINALIZE;
+    QGraphicsScene *SCENE;
+
     QSet<S *> S_ITEMS = {};
     QSet<T *> T_ITEMS = {};
 
@@ -55,6 +57,8 @@ protected:
 
     virtual void select(S *item)=0;
     virtual void select(T *item)=0;
+    //! Called when everything is to be deselected.
+    virtual void deselect()=0;
 
     //! Only need to account for any unexpected changes into selection rect.
     //! Resizing when an item is added is not necessary.
@@ -80,23 +84,25 @@ protected:
     template<class R>
     static qreal zValue(R *item) {return dynamic_cast<QGraphicsItem *>(item)->zValue();}
 
+    void virtual moveBy(QPointF pt) {GROUP->moveBy(pt.x(),pt.y()); PATH->moveBy(pt.x(),pt.y());}
+
 public:
 
     //! A class for controlling selections and maintaining track for two of their distinct types.
     //! Must be declared after setting the scene for the view.
     Selection(QGraphicsView *view) : SCENE(view->scene())
     {
-        PATH = new QGraphicsPathItem; GROUP = new QGraphicsItemGroup;
-        SCENE->addItem(PATH); GROUP = SCENE->createItemGroup({}); PATH->hide();
-        PATH->setZValue(std::numeric_limits<qreal>::max());
-        PATH->setPen(PEN); PATH->setBrush(BRUSH);
+        resetPath(false); PATH->hide();
+        GROUP = new QGraphicsItemGroup; GROUP = SCENE->createItemGroup({});
         updateAsPath(); setFinalizeOption(FinalizeOption::BOTH);
     }
+
     virtual ~Selection() {delete PATH; SCENE->destroyItemGroup(GROUP);}
 
-    void startPath(QPoint pt) {resetSelection(); PATH->show(); start=pt; PATH->setPen(PEN); PATH->setBrush(BRUSH);}
+    // Selection does reset. But path still has issues. Path start point is not cursor start point in buggy scenario.
+    void startPath(QPointF pt) {resetSelection(); PATH->show(); START=pt; PATH->setPen(PEN); PATH->setBrush(BRUSH);}
     void updateAsPath(bool update=false) {PATH_DRAW = (update) ? (&Selection::updatePath) : (&Selection::updateRect);}
-    void updateSelection(QPoint pt) {(this->*PATH_DRAW)(pt);}
+    void updateSelection(QPointF pt) {(this->*PATH_DRAW)(pt);}
 
     void setFinalizeOption(FinalizeOption fOption)
     {
@@ -106,18 +112,30 @@ public:
         case FinalizeOption::BOTH:   FINALIZE = &Selection::finalize_; return;
         }
     }
-    void finalize(QPoint pt) {(this->*FINALIZE)(pt);}
+    void finalize(QPointF pt) {(this->*FINALIZE)(pt);}
 
     // May want to hide from public
     QSet<S *> sItems() {return S_ITEMS;}
     QSet<T *> tItems() {return T_ITEMS;}
 
-    // public // Note: Problems occur when drawing path after reselecting nothing.
-    void resetSelection() {PATH->setPath(QPainterPath()); resetGroup(); updateAsPath();}
+    // Want optional behaviour for deselecting objects.
+    void resetSelection() {resetPath(); resetGroup(); updateAsPath();}
     void resetGroup() {SCENE->destroyItemGroup(GROUP); GROUP = SCENE->createItemGroup({});}
-    void resetPath() {PATH->setPath(QPainterPath()); PATH->hide();}
+    void resetPath(bool del=true)
+    {
+        if (del) {delete PATH;}
+        PATH = new QGraphicsPathItem;
+        SCENE->addItem(PATH);
+        PATH->setZValue(std::numeric_limits<qreal>::max()-1);
+        PATH->setPen(PEN); PATH->setBrush(BRUSH);
+        PATH->setPath(QPainterPath());
+    }
+
     void amendPath()
-    { if (GROUP->childItems().isEmpty()) {resetSelection();} else {setPathRect(GROUP->boundingRect()); finalizePath();}}
+    {
+        if (GROUP->childItems().isEmpty()) { deselect(); PATH->hide(); resetSelection(); }
+        else {setPathRect(GROUP->boundingRect()); finalizePath(); }
+    }
 
     // public
     void clearS()
@@ -139,23 +157,9 @@ public:
         foreach (auto item, items) { qreal n = item->zValue(); if (n > max) max = n; }
         return max;
     }
-
-    QString currentPathDraw() {
-        if (PATH_DRAW == &Selection::updateRect) {return "updateRect";}
-        if (PATH_DRAW == &Selection::updatePath) {return "updatePath";}
-        return "2";
-    }
-
-    QString currentFinalize() {
-        if (FINALIZE == &Selection::finalize_) { return "finalize_"; }
-        if (FINALIZE == &Selection::finalize_S) { return "finalize_S"; }
-        if (FINALIZE == &Selection::finalize_T) { return "finalize_T"; }
-        return "8";
-    }
 };
 
 
-// Need to clean code using this.
 class SelectionNodeVector : public Selection<Node, Vector>
 {
 public:
@@ -164,15 +168,31 @@ public:
 
     void select(Node *item) override;
     void select(Vector *item) override;
+    void deselect() override;
 
 protected:
     void finalizePath() override;
 };
 
-
-// Need to clean code using this.
 class SelectionShapeCurve : public Selection<Shape, Curve>
 {
+    static QRectF SCALE_BUTTON_RECT;
+    static QRectF MOVE_BUTTON_RECT;
+
+    // For applying transformations on selection
+    // Should first initialize them, then draw them when the selection rect is drawn.
+    typedef void (SelectionShapeCurve::*Transform)(QPointF);
+    typedef QGraphicsPathItem TransformButton;
+    QMap<TransformButton *,QPointF> SCALE_BUTTONS;
+    TransformButton *MOVE_BUTTON;
+    TransformButton *SELECTED_BUTTON;
+    Transform TRANSFORM_BY;
+
+    TransformButton *getTransformButton(QPointF pt);
+    void setTransformOrigin(QGraphicsPathItem *pt);
+    void resetTransformButtons();
+    void initializeScaleButtons();
+
 public:
     SelectionShapeCurve(QGraphicsView *view);
     ~SelectionShapeCurve();
@@ -181,8 +201,18 @@ public:
     void select(Curve *item) override;
 
     void showNodes();
+    void showButtons(bool visible);
+
+    // True if item is to be transformed, and prepares transformation, false otherwise.
+    // Transforms if the item clicks a transform button.
+    bool shouldTransform();
+    bool setTransform(QPointF pt);
+    void transform(QPointF pt);
 
 protected:
+    void deselect() override;
+    void rescaleBy(QPointF pt);
+    void moveBy(QPointF pt) override;
     void finalizePath() override;
 };
 
