@@ -12,6 +12,9 @@ protected:
 public:
     Shape(QGraphicsItem *parent=nullptr);
 
+    void setPen(QPen);
+    void setBrush(QBrush);
+
     virtual void paint(QPainter *painter)=0;
     virtual ~Shape();
 };

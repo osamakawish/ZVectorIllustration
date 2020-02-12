@@ -33,9 +33,20 @@ void GraphicsView::initialize()
 void GraphicsView::test()
 {
     Ellipse *ellipse = new Ellipse(QRectF(20,20,100,200)); scene()->addItem(ellipse);
-    scene()->addRect(20,20,100,200);
+//    scene()->addRect(20,20,100,200);
     ellipse->setZValue(20);
 
+    Ellipse *e2 = new Ellipse(QRectF(20,20,100,200));
+    scene()->addItem(e2); e2->setZValue(19);
+    e2->setPen(QColor(Qt::red));
+    QTransform tr2; tr2.translate(-20,-20);
+    e2->setTransform(tr2);
+
+
+}
+
+void GraphicsView::test2()
+{
     // Vector Test
     Vector *v = new Vector(QPointF(30,100),QPointF(-50,80)); scene()->addItem(v);
     scene()->addEllipse((30)-6,(100)-6,12,12); scene()->addEllipse((-50)-6,(80)-6,12,12);
@@ -51,6 +62,8 @@ void GraphicsView::test()
     c->add(QPointF(100,80));
     c->showNodes(); c->showVectors();
 }
+
+
 
 GraphicsView::GraphicsView(QWidget *parent) : QGraphicsView(new QGraphicsScene,parent),
     SHAPE_CURVE_SELECTION(this), NODE_VECTOR_SELECTION(this)

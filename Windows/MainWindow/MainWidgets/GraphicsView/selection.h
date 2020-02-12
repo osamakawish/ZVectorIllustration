@@ -18,6 +18,7 @@
 
 enum class FinalizeOption { S_ONLY, T_ONLY, BOTH };
 
+
 template<class S, class T>
 class Selection
 {
@@ -84,7 +85,7 @@ protected:
     template<class R>
     static qreal zValue(R *item) {return dynamic_cast<QGraphicsItem *>(item)->zValue();}
 
-    void virtual moveBy(QPointF pt) {GROUP->moveBy(pt.x(),pt.y()); PATH->moveBy(pt.x(),pt.y());}
+    void virtual moveBy(QPointF df, QPointF) {GROUP->moveBy(df.x(),df.y()); PATH->moveBy(df.x(),df.y());}
 
 public:
 
@@ -179,9 +180,12 @@ class SelectionShapeCurve : public Selection<Shape, Curve>
     static QRectF SCALE_BUTTON_RECT;
     static QRectF MOVE_BUTTON_RECT;
 
+    QTransform TRANSFORM_APPLIED = QTransform();
+    QPointF TRANSFORMATION_ORIGIN;
+
     // For applying transformations on selection
     // Should first initialize them, then draw them when the selection rect is drawn.
-    typedef void (SelectionShapeCurve::*Transform)(QPointF);
+    typedef void (SelectionShapeCurve::*Transform)(QPointF, QPointF);
     typedef QGraphicsPathItem TransformButton;
     QMap<TransformButton *,QPointF> SCALE_BUTTONS;
     TransformButton *MOVE_BUTTON;
@@ -192,6 +196,15 @@ class SelectionShapeCurve : public Selection<Shape, Curve>
     void setTransformOrigin(QGraphicsPathItem *pt);
     void resetTransformButtons();
     void initializeScaleButtons();
+
+    void applyTransformation();
+
+    QRectF selectionBoundingRect();
+    TransformButton *getAcrossScaleButton(TransformButton *button);
+
+    void resizeToRect(QRectF rect);
+
+    static QPointF applyTransformToPoint(QTransform, QPointF);
 
 public:
     SelectionShapeCurve(QGraphicsView *view);
@@ -207,12 +220,12 @@ public:
     // Transforms if the item clicks a transform button.
     bool shouldTransform();
     bool setTransform(QPointF pt);
-    void transform(QPointF pt);
+    void transform(QPointF df, QPointF pt);
 
 protected:
     void deselect() override;
-    void rescaleBy(QPointF pt);
-    void moveBy(QPointF pt) override;
+    void rescaleBy(QPointF df, QPointF pt);
+    void moveBy(QPointF df, QPointF) override;
     void finalizePath() override;
 };
 

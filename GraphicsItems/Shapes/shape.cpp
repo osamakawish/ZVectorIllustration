@@ -12,6 +12,12 @@ Shape::Shape(QGraphicsItem *parent) : Drawable(parent)
     setFlags(GraphicsItemFlag::ItemIsMovable | GraphicsItemFlag::ItemIsSelectable);
 }
 
+void Shape::setPen(QPen pen)
+{ PEN = pen; PEN.setCosmetic(true); update(boundingRect()); }
+
+void Shape::setBrush(QBrush brush)
+{ BRUSH = brush; update(boundingRect()); }
+
 Shape::~Shape()
 {}
 

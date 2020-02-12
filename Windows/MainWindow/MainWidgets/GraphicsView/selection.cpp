@@ -65,10 +65,13 @@ SelectionShapeCurve::TransformButton *SelectionShapeCurve::getTransformButton(QP
     return nullptr;
 }
 
+// Note: this isn't working for whatever reason. Need to try finding the center of transformation origin.
+// which appears to be (0,0). translate to (0,0), rescale, then translate back.
 void SelectionShapeCurve::setTransformOrigin(QGraphicsPathItem *item)
 {
-    QPointF pt = item->pos(); SELECTED_BUTTON=item;
-    PATH->setTransformOriginPoint(pt); GROUP->setTransformOriginPoint(pt);
+    QPointF pt = item->pos(); QPointF sz(8,8); SELECTED_BUTTON=item;
+    TRANSFORMATION_ORIGIN = pt;
+    SCENE->addRect(QRectF(pt-sz,pt+sz));
 }
 
 QPointF multiply(QPointF pt1, QPointF pt2)
@@ -76,7 +79,7 @@ QPointF multiply(QPointF pt1, QPointF pt2)
 
 void SelectionShapeCurve::resetTransformButtons()
 {
-    QRectF rect = GROUP->boundingRect();
+    QRectF rect = selectionBoundingRect();
     QPointF center = rect.center();
     MOVE_BUTTON->setPos(center);
     QPointF df(rect.width() / 2,rect.height() / 2);
@@ -107,18 +110,53 @@ void SelectionShapeCurve::initializeScaleButtons()
     }
 }
 
+void SelectionShapeCurve::applyTransformation()
+{
+    GROUP->setTransform(TRANSFORM_APPLIED);
+    setPathRect(selectionBoundingRect());
+    resetTransformButtons();
+}
+
+
+QRectF SelectionShapeCurve::selectionBoundingRect()
+{ return GROUP->mapRectToScene(GROUP->boundingRect()); }
+
+SelectionShapeCurve::TransformButton *SelectionShapeCurve::getAcrossScaleButton(SelectionShapeCurve::TransformButton *button)
+{ QPointF pt = -SCALE_BUTTONS[button]; return SCALE_BUTTONS.key(pt); }
+
+void SelectionShapeCurve::resizeToRect(QRectF newRect)
+{
+    QRectF oldRect = GROUP->boundingRect();
+
+    QTransform transform; QPointF tl1 = oldRect.topLeft();
+    transform.translate(tl1.x(), tl1.y());
+
+    qreal sx = newRect.width() / oldRect.width();
+    qreal sy = newRect.height() / oldRect.height();
+    transform.scale(sx,sy);
+
+    QPointF tl2 = newRect.topLeft();
+    transform.translate(-tl2.x(), -tl2.y());
+
+    TRANSFORM_APPLIED = transform;
+}
+
 bool SelectionShapeCurve::setTransform(QPointF pt)
 {
     QGraphicsPathItem *item = getTransformButton(pt);
     if (SCALE_BUTTONS.contains(item))
-    { SELECTED_BUTTON = item; TRANSFORM_BY = &SelectionShapeCurve::rescaleBy; return true; }
+    {
+        SELECTED_BUTTON = item; TRANSFORM_BY = &SelectionShapeCurve::rescaleBy;
+        setTransformOrigin(getAcrossScaleButton(item));
+        return true;
+    }
     else if (item == MOVE_BUTTON)
     { SELECTED_BUTTON = item; TRANSFORM_BY = &SelectionShapeCurve::moveBy; return true; }
 
     SELECTED_BUTTON = nullptr; return false;
 }
 
-void SelectionShapeCurve::transform(QPointF pt) {(this->*TRANSFORM_BY)(pt);}
+void SelectionShapeCurve::transform(QPointF df, QPointF pt) {(this->*TRANSFORM_BY)(df,pt);}
 
 void SelectionShapeCurve::deselect()
 { showButtons(false); }
@@ -126,27 +164,53 @@ void SelectionShapeCurve::deselect()
 QPointF scaleFactors(QPointF df, QSizeF size)
 { return QPointF((size.width()+df.rx())/size.width(), (size.height()+df.ry())/size.height()); }
 
-// Bug: Problem clearly has to do with transformation origin
-void SelectionShapeCurve::rescaleBy(QPointF df)
+// Bug: Problem clearly has to do with transformation origin. Rect transformation origin wasn't at appropriate corner.
+void SelectionShapeCurve::rescaleBy(QPointF, QPointF pt)
 {
-    MOVE_BUTTON->setPos(MOVE_BUTTON->pos()+df);
+    // Rescale to point.
+    resizeToRect(QRectF(TRANSFORMATION_ORIGIN,pt).normalized());
 
-    QPointF scale = scaleFactors(df,PATH->boundingRect().size());
+    // EVERYTHING BELOW NEEDS TO BE FIXED.
+//    MOVE_BUTTON->setPos(MOVE_BUTTON->pos()+df); qreal a = 6;
+//    QPointF scale = scaleFactors(df,PATH->boundingRect().adjusted(a,a,a,a).size());
 
-    QTransform transform; transform.scale(scale.x(),scale.y());
+    // Still doesn't do what I want it to.
+//    qreal x = TRANSFORMATION_ORIGIN.x(); qreal y = TRANSFORMATION_ORIGIN.y();
+//    TRANSFORM_APPLIED.translate(-x,-y); TRANSFORM_APPLIED.scale(scale.x(),scale.y());
+//    TRANSFORM_APPLIED.translate(x,y);
 
-    GROUP->setTransform(transform,true); setPathRect(GROUP->mapRectToScene(GROUP->boundingRect()));
-    resetTransformButtons();
+    applyTransformation();
 }
 
 void move(QGraphicsItem *item, QPointF pt) {item->moveBy(pt.x(),pt.y());}
 
-void SelectionShapeCurve::moveBy(QPointF df)
+void SelectionShapeCurve::moveBy(QPointF df, QPointF pt)
 {
-    Selection<Shape, Curve>::moveBy(df); move(MOVE_BUTTON,df);
+    Selection<Shape, Curve>::moveBy(df, pt); move(MOVE_BUTTON,df);
     auto it = SCALE_BUTTONS.begin();
     while (it!=SCALE_BUTTONS.end()) { it.key()->moveBy(df.x(),df.y()); it++; }
 }
 
 void SelectionShapeCurve::finalizePath()
 { setPathRect(PATH->path().controlPointRect()); showButtons(true); }
+
+QPointF SelectionShapeCurve::applyTransformToPoint(QTransform t, QPointF pt)
+{
+    qreal x = pt.x(); qreal y = pt.y();
+    qreal sx = t.m11(); qreal sy = t.m22(); // scale x and y
+    qreal Sx = t.m21(); qreal Sy = t.m12(); // shear x and y
+    qreal dx = t.m31(); qreal dy = t.m32(); // translate x and y
+
+    qreal x_ = sx*x + Sx*y + dx;
+    qreal y_ = sy*y + Sy*x + dy;
+
+    qreal px = t.m13();
+    qreal py = t.m23();
+    qreal pz = t.m33();
+    if (!t.isAffine()) {
+        qreal w_ = px*x + py*y + pz;
+        x_ /= w_;
+        y_ /= w_;
+    }
+    return QPointF(x_,y_);
+}

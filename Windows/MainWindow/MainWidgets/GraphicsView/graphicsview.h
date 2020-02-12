@@ -29,7 +29,7 @@ class GraphicsView : public QGraphicsView
     SelectionNodeVector NODE_VECTOR_SELECTION;
 
     void initialize();
-    void test();
+    void test(); void test2();
 
 public:
     GraphicsView(QWidget *parent = nullptr);
