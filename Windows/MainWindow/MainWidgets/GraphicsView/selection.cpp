@@ -164,21 +164,10 @@ void SelectionShapeCurve::deselect()
 QPointF scaleFactors(QPointF df, QSizeF size)
 { return QPointF((size.width()+df.rx())/size.width(), (size.height()+df.ry())/size.height()); }
 
-// Bug: Problem clearly has to do with transformation origin. Rect transformation origin wasn't at appropriate corner.
 void SelectionShapeCurve::rescaleBy(QPointF, QPointF pt)
 {
-    // Rescale to point.
     resizeToRect(QRectF(TRANSFORMATION_ORIGIN,pt));
-
-    // EVERYTHING BELOW NEEDS TO BE FIXED.
-//    MOVE_BUTTON->setPos(MOVE_BUTTON->pos()+df); qreal a = 6;
-//    QPointF scale = scaleFactors(df,PATH->boundingRect().adjusted(a,a,a,a).size());
-
-    // Still doesn't do what I want it to.
-//    qreal x = TRANSFORMATION_ORIGIN.x(); qreal y = TRANSFORMATION_ORIGIN.y();
-//    TRANSFORM_APPLIED.translate(-x,-y); TRANSFORM_APPLIED.scale(scale.x(),scale.y());
-//    TRANSFORM_APPLIED.translate(x,y);
-
+    qDebug() << TRANSFORMATION_ORIGIN;
     applyTransformation();
 }
 

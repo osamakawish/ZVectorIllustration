@@ -1,8 +1,8 @@
 # Bugs
 
-## Rescale Potential Issue
+## Changing Transformation Origin Moves Object
 
-Rescale function may need fixing when the selection changes. In fact, I should do that ASAP.
+In fact, only the top left origin works properly.
 
 ## Curve `pos()` not centered
 
