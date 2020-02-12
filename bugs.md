@@ -1,5 +1,9 @@
 # Bugs
 
+## Rescale Potential Issue
+
+Rescale function may need fixing when the selection changes. In fact, I should do that ASAP.
+
 ## Curve `pos()` not centered
 
 ### Solution

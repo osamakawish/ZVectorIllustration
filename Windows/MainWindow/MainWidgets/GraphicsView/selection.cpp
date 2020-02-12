@@ -168,7 +168,7 @@ QPointF scaleFactors(QPointF df, QSizeF size)
 void SelectionShapeCurve::rescaleBy(QPointF, QPointF pt)
 {
     // Rescale to point.
-    resizeToRect(QRectF(TRANSFORMATION_ORIGIN,pt).normalized());
+    resizeToRect(QRectF(TRANSFORMATION_ORIGIN,pt));
 
     // EVERYTHING BELOW NEEDS TO BE FIXED.
 //    MOVE_BUTTON->setPos(MOVE_BUTTON->pos()+df); qreal a = 6;
