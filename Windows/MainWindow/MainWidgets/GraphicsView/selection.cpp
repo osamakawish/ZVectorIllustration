@@ -150,6 +150,9 @@ void SelectionShapeCurve::resizeToRect(QRectF newRect)
     TRANSFORM_APPLIED = transform;
 }
 
+// Corner reset
+QPointF cr(QTransform tr, QPointF pt) {return pt - tr.map(pt);}
+
 void SelectionShapeCurve::scaleTransform(QPointF df)
 {
     QSizeF sz = QRectF(TRANSFORMATION_ORIGIN,SELECTED_BUTTON->pos()).size();
@@ -159,13 +162,9 @@ void SelectionShapeCurve::scaleTransform(QPointF df)
     qreal w = sz.width(); qreal h = sz.height();
     qreal a = s.x(); qreal b = s.y();
 
-//    e1->setTransform(QTransform().scale(a,b).translate(-(a-1)*100/(a*2),-(b-1)*200/(b*2)));
-
-    TRANSFORM_APPLIED
-            .translate(x,y)
-            .scale(s.x(),s.y())
-            .translate(-x,-y) // Need to fix this to a different position.
-            ;
+    TRANSFORM_APPLIED.scale(a,b);
+    QPointF tr = cr(TRANSFORM_APPLIED,TRANSFORMATION_ORIGIN);
+    TRANSFORM_APPLIED.translate(tr.x(),tr.y());
 }
 
 bool SelectionShapeCurve::setTransform(QPointF pt)
@@ -190,7 +189,7 @@ void SelectionShapeCurve::deselect()
 
 QPointF SelectionShapeCurve::scaleFactors(QPointF df, QSizeF size)
 {
-    QPointF c = SCALE_BUTTONS[SELECTED_BUTTON]; qDebug() << df << size;
+    QPointF c = SCALE_BUTTONS[SELECTED_BUTTON];
     return QPointF((size.width()+df.x())/size.width(), (size.height()+df.y())/size.height());
 }
 
