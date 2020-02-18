@@ -180,6 +180,8 @@ class SelectionShapeCurve : public Selection<Shape, Curve>
     static QRectF SCALE_BUTTON_RECT;
     static QRectF MOVE_BUTTON_RECT;
 
+    QPointF MVP = QPointF();
+
     QTransform TRANSFORM_APPLIED = QTransform();
     QPointF TRANSFORMATION_ORIGIN;
 
@@ -198,11 +200,13 @@ class SelectionShapeCurve : public Selection<Shape, Curve>
     void initializeScaleButtons();
 
     void applyTransformation();
+    QPointF rectBoundaryPoint(QPointF relativePos, QRectF rect);
 
     QRectF selectionBoundingRect();
     TransformButton *getAcrossScaleButton(TransformButton *button);
 
     void resizeToRect(QRectF rect);
+    void scaleTransform(QPointF df);
 
     static QPointF applyTransformToPoint(QTransform, QPointF);
 
@@ -224,9 +228,12 @@ public:
 
 protected:
     void deselect() override;
-    void rescaleBy(QPointF df, QPointF pt);
+    void rescaleBy(QPointF df, QPointF);
+//    void shearBy(QPointF df, QPointF); -> Need to work on this a little
     void moveBy(QPointF df, QPointF) override;
     void finalizePath() override;
+private:
+    QPointF scaleFactors(QPointF df, QSizeF size);
 };
 
 #endif // SELECTION_H

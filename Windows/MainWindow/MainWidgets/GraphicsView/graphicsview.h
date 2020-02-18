@@ -20,7 +20,7 @@ typedef void (*MouseEvent)(QMouseEvent *);
 
 class GraphicsView : public QGraphicsView
 {
-    QPen testPen;
+    qreal Z_VALUE=1;
 
     static MouseEvent PRESS, DOUBLE_CLICK, MOVE, RELEASE;
     QGraphicsRectItem *SHEET_RECT;
@@ -41,6 +41,7 @@ public:
     void mouseMoveEvent(QMouseEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *e) override;
 
+    void addItem(QGraphicsItem *item);
     void debug();
 
     friend class MouseAction; friend class PenAction;

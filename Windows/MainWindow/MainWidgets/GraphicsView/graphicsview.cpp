@@ -32,17 +32,27 @@ void GraphicsView::initialize()
 
 void GraphicsView::test()
 {
-    Ellipse *ellipse = new Ellipse(QRectF(20,20,100,200)); scene()->addItem(ellipse);
-//    scene()->addRect(20,20,100,200);
+    auto rct = QRectF(30,30,100,200);
+    Ellipse *ellipse = new Ellipse(rct); scene()->addItem(ellipse);
     ellipse->setZValue(20);
 
-    Ellipse *e2 = new Ellipse(QRectF(20,20,100,200));
-    scene()->addItem(e2); e2->setZValue(19);
-    e2->setPen(QColor(Qt::red));
-    QTransform tr2; tr2.translate(-20,-20);
-    e2->setTransform(tr2);
+//    Ellipse *e1 = new Ellipse(QRectF(20,20,100,200)); addItem(e1);
+//    qreal a = 1.5; qreal b = 2;
+//    e1->setTransform(QTransform().scale(a,b).translate(-(a-1)*100/(a*2),-(b-1)*200/(b*2)));
 
+//    QGraphicsRectItem *e2 = new QGraphicsRectItem(rct); addItem(e2);
+//    qreal c = 0; qreal d = 1; qreal x = rct.center().x(); qreal y = rct.center().y();
+//    QTransform shr = QTransform().shear(c,d).translate(-c*y,-d*x); -> Returns object to its center
+//    e2->setTransform(shr);
+//    qDebug() << shr.map(rct) << shr.map(rct.center());
 
+    auto rect = scene()->addRect(rct); rect->setPen(QPen(Qt::red));
+
+    QPointF df(8,8);
+    QPointF pt = ellipse->transformOriginPoint();
+//    QPointF pt1 = e1->transformOriginPoint();
+    scene()->addRect(QRectF(pt-df,pt+df));
+//    scene()->addRect(QRectF(pt1-df,pt1+df));
 }
 
 void GraphicsView::test2()
@@ -87,6 +97,9 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *e)
 
 void GraphicsView::mouseReleaseEvent(QMouseEvent *e)
 { Mouse::release(); RELEASE(e); }
+
+void GraphicsView::addItem(QGraphicsItem *item)
+{ scene()->addItem(item); item->setZValue(Z_VALUE); Z_VALUE++; }
 
 void GraphicsView::debug()
 {

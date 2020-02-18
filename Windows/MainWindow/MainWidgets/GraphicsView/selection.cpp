@@ -1,4 +1,5 @@
 #include "selection.h"
+#include "ActionMethods/mousebehaviour.h"
 #include "GraphicsItems/Curves/node.h"
 #include "GraphicsItems/Curves/curve.h"
 
@@ -69,8 +70,8 @@ SelectionShapeCurve::TransformButton *SelectionShapeCurve::getTransformButton(QP
 // which appears to be (0,0). translate to (0,0), rescale, then translate back.
 void SelectionShapeCurve::setTransformOrigin(QGraphicsPathItem *item)
 {
-    QPointF pt = item->pos(); QPointF sz(8,8); SELECTED_BUTTON=item;
-    TRANSFORMATION_ORIGIN = pt;
+    QPointF pt = item->pos(); QPointF sz(8,8);
+    TRANSFORMATION_ORIGIN = item->pos();
     SCENE->addRect(QRectF(pt-sz,pt+sz));
 }
 
@@ -117,6 +118,12 @@ void SelectionShapeCurve::applyTransformation()
     resetTransformButtons();
 }
 
+QPointF SelectionShapeCurve::rectBoundaryPoint(QPointF r, QRectF rect)
+{
+    QPointF o = rect.center(); qreal w = rect.width() / 2; qreal h = rect.height() / 2;
+    return QPointF(o.x() + r.x()*w, o.y() + r.y()*h);
+}
+
 
 QRectF SelectionShapeCurve::selectionBoundingRect()
 { return GROUP->mapRectToScene(GROUP->boundingRect()); }
@@ -128,17 +135,37 @@ void SelectionShapeCurve::resizeToRect(QRectF newRect)
 {
     QRectF oldRect = GROUP->boundingRect();
 
-    QTransform transform; QPointF tl1 = oldRect.topLeft();
+    QTransform transform;
+    QPointF r = SCALE_BUTTONS[SELECTED_BUTTON];
+    QPointF tl1 = rectBoundaryPoint(r,oldRect);
     transform.translate(tl1.x(), tl1.y());
 
     qreal sx = newRect.width() / oldRect.width();
     qreal sy = newRect.height() / oldRect.height();
     transform.scale(sx,sy);
 
-    QPointF tl2 = newRect.topLeft();
+    QPointF tl2 = rectBoundaryPoint(r,newRect);
     transform.translate(-tl2.x(), -tl2.y());
 
     TRANSFORM_APPLIED = transform;
+}
+
+void SelectionShapeCurve::scaleTransform(QPointF df)
+{
+    QSizeF sz = QRectF(TRANSFORMATION_ORIGIN,SELECTED_BUTTON->pos()).size();
+    QPointF s = scaleFactors(df,sz);
+
+    qreal x = TRANSFORMATION_ORIGIN.x(); qreal y = TRANSFORMATION_ORIGIN.y();
+    qreal w = sz.width(); qreal h = sz.height();
+    qreal a = s.x(); qreal b = s.y();
+
+//    e1->setTransform(QTransform().scale(a,b).translate(-(a-1)*100/(a*2),-(b-1)*200/(b*2)));
+
+    TRANSFORM_APPLIED
+            .translate(x,y)
+            .scale(s.x(),s.y())
+            .translate(-x,-y) // Need to fix this to a different position.
+            ;
 }
 
 bool SelectionShapeCurve::setTransform(QPointF pt)
@@ -161,13 +188,20 @@ void SelectionShapeCurve::transform(QPointF df, QPointF pt) {(this->*TRANSFORM_B
 void SelectionShapeCurve::deselect()
 { showButtons(false); }
 
-QPointF scaleFactors(QPointF df, QSizeF size)
-{ return QPointF((size.width()+df.rx())/size.width(), (size.height()+df.ry())/size.height()); }
-
-void SelectionShapeCurve::rescaleBy(QPointF, QPointF pt)
+QPointF SelectionShapeCurve::scaleFactors(QPointF df, QSizeF size)
 {
-    resizeToRect(QRectF(TRANSFORMATION_ORIGIN,pt));
-    qDebug() << TRANSFORMATION_ORIGIN;
+    QPointF c = SCALE_BUTTONS[SELECTED_BUTTON]; qDebug() << df << size;
+    return QPointF((size.width()+df.x())/size.width(), (size.height()+df.y())/size.height());
+}
+
+qreal fix(qreal a, qreal b) { return -(a-1)*b/(2*a); }
+
+void SelectionShapeCurve::rescaleBy(QPointF df, QPointF pt)
+{
+//    resizeToRect(QRectF(TRANSFORMATION_ORIGIN,pt)); // -> has it right now.
+
+    scaleTransform(df); // -> Works better : need to fix directions based on selected point and rate of rescale
+
     applyTransformation();
 }
 
