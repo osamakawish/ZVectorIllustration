@@ -33,8 +33,22 @@ void GraphicsView::initialize()
 void GraphicsView::test()
 {
     auto rct = QRectF(30,30,100,200);
-    Ellipse *ellipse = new Ellipse(rct); scene()->addItem(ellipse);
-    ellipse->setZValue(20);
+    auto rct1 = QRectF(80,50,90,150);
+    Ellipse *ell = new Ellipse(rct); scene()->addItem(ell);
+    ell->setZValue(20);
+
+    QTransform t;
+    qreal cx = rct1.width() / rct.width();
+    qreal cy = rct1.height() / rct.height();
+    QPointF d = rct1.topLeft() - rct.topLeft();
+
+    t.scale(cx,cy);
+//    qDebug() << t.map(rct) << QPolygonF(rct1) << cx << cy;
+
+    ell->setTransform(t);
+
+
+//    ell->setTransform(QTransform())
 
 //    Ellipse *e1 = new Ellipse(QRectF(20,20,100,200)); addItem(e1);
 //    qreal a = 1.5; qreal b = 2;
@@ -47,9 +61,10 @@ void GraphicsView::test()
 //    qDebug() << shr.map(rct) << shr.map(rct.center());
 
     auto rect = scene()->addRect(rct); rect->setPen(QPen(Qt::red));
+    auto rect1 = scene()->addRect(rct1); rect1->setPen(QPen(Qt::yellow));
 
     QPointF df(8,8);
-    QPointF pt = ellipse->transformOriginPoint();
+    QPointF pt = ell->transformOriginPoint();
 //    QPointF pt1 = e1->transformOriginPoint();
     scene()->addRect(QRectF(pt-df,pt+df));
 //    scene()->addRect(QRectF(pt1-df,pt1+df));

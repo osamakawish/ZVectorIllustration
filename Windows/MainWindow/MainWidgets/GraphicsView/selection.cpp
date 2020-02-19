@@ -138,20 +138,20 @@ void SelectionShapeCurve::resizeToRect(QRectF newRect)
     QTransform transform;
     QPointF r = SCALE_BUTTONS[SELECTED_BUTTON];
     QPointF tl1 = rectBoundaryPoint(r,oldRect);
-    transform.translate(tl1.x(), tl1.y());
+    transform.translate(-tl1.x(), -tl1.y());
 
     qreal sx = newRect.width() / oldRect.width();
     qreal sy = newRect.height() / oldRect.height();
     transform.scale(sx,sy);
 
     QPointF tl2 = rectBoundaryPoint(r,newRect);
-    transform.translate(-tl2.x(), -tl2.y());
+    transform.translate(tl2.x(), tl2.y());
 
     TRANSFORM_APPLIED = transform;
 }
 
 // Corner reset
-QPointF cr(QTransform tr, QPointF pt) {return pt - tr.map(pt);}
+QPointF cr(QTransform &tr, QPointF pt) {return pt - tr.map(pt);}
 
 void SelectionShapeCurve::scaleTransform(QPointF df)
 {
@@ -165,6 +165,9 @@ void SelectionShapeCurve::scaleTransform(QPointF df)
     TRANSFORM_APPLIED.scale(a,b);
     QPointF tr = cr(TRANSFORM_APPLIED,TRANSFORMATION_ORIGIN);
     TRANSFORM_APPLIED.translate(tr.x(),tr.y());
+//    tr = cr(TRANSFORM_APPLIED,TRANSFORMATION_ORIGIN);
+//    TRANSFORM_APPLIED.translate(tr.x(),tr.y());
+    qDebug() << TRANSFORMATION_ORIGIN << TRANSFORM_APPLIED.map(TRANSFORMATION_ORIGIN);
 }
 
 bool SelectionShapeCurve::setTransform(QPointF pt)
@@ -197,7 +200,7 @@ qreal fix(qreal a, qreal b) { return -(a-1)*b/(2*a); }
 
 void SelectionShapeCurve::rescaleBy(QPointF df, QPointF pt)
 {
-//    resizeToRect(QRectF(TRANSFORMATION_ORIGIN,pt)); // -> has it right now.
+//    resizeToRect(QRectF(TRANSFORMATION_ORIGIN,pt));
 
     scaleTransform(df); // -> Works better : need to fix directions based on selected point and rate of rescale
 
