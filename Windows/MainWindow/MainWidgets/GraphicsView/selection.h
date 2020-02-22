@@ -41,6 +41,8 @@ class Selection
     void finalize_T(QPointF pt)
     { closePath(); (this->*PATH_DRAW)(pt); auto items = SCENE->items(PATH->path()); gather(items,false); amendPath(); }
 
+
+
 protected:
     QPointF START;
     PathUpdate PATH_DRAW;
@@ -208,7 +210,10 @@ class SelectionShapeCurve : public Selection<Shape, Curve>
     void resizeToRect(QRectF rect);
     void scaleTransform(QPointF df);
 
-    static QPointF applyTransformToPoint(QTransform, QPointF);
+    //! Call when mouse is released.
+    //! Reset translation and replace it with a new pos()
+    //! Alternatively, may want to try to get the new sclae button position based on the transformation applied.
+
 
 public:
     SelectionShapeCurve(QGraphicsView *view);
@@ -225,6 +230,7 @@ public:
     bool shouldTransform();
     bool setTransform(QPointF pt);
     void transform(QPointF df, QPointF pt);
+    void endTransform();
 
 protected:
     void deselect() override;

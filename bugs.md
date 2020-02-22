@@ -8,6 +8,10 @@ Most recent and relevant bugs are on top of this
 
 I've tried a lot of things here. Fixed variables, and so on.
 
+Note that the transformation applied on the object may reset when something new is selected.
+
+**Resolve:** Long time to figure this out, but the transformation origin is in item coordinates, not scene coordinates.
+
 ## Resolved
 
 ### Changing Transformation Origin Moves Object

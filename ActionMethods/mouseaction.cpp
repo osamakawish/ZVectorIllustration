@@ -54,7 +54,7 @@ void MouseAction::shapeRelease(QMouseEvent *)
     // Bugs occur in case where nothing is selected after moving a selected object.
     // Need to figure out what happens to selection rect.
     if (SHAPE_CURVE_SELECTION->shouldTransform())// Need to reset transform option in this case.
-    {SHAPE_CURVE_SELECTION->transform(Mouse::movedBy(),Mouse::moved());}
+    {SHAPE_CURVE_SELECTION->transform(Mouse::movedBy(),Mouse::moved()); SHAPE_CURVE_SELECTION->endTransform();}
     else // When nothing is selected, selection should hide buttons.
     {SHAPE_CURVE_SELECTION->finalize(Mouse::releasePos()); }
 }

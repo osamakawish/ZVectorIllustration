@@ -192,7 +192,6 @@ void SelectionShapeCurve::deselect()
 
 QPointF SelectionShapeCurve::scaleFactors(QPointF df, QSizeF size)
 {
-    QPointF c = SCALE_BUTTONS[SELECTED_BUTTON];
     return QPointF((size.width()+df.x())/size.width(), (size.height()+df.y())/size.height());
 }
 
@@ -219,23 +218,11 @@ void SelectionShapeCurve::moveBy(QPointF df, QPointF pt)
 void SelectionShapeCurve::finalizePath()
 { setPathRect(PATH->path().controlPointRect()); showButtons(true); }
 
-QPointF SelectionShapeCurve::applyTransformToPoint(QTransform t, QPointF pt)
+// Somehow, this also didn't work.
+void SelectionShapeCurve::endTransform()
 {
-    qreal x = pt.x(); qreal y = pt.y();
-    qreal sx = t.m11(); qreal sy = t.m22(); // scale x and y
-    qreal Sx = t.m21(); qreal Sy = t.m12(); // shear x and y
-    qreal dx = t.m31(); qreal dy = t.m32(); // translate x and y
-
-    qreal x_ = sx*x + Sx*y + dx;
-    qreal y_ = sy*y + Sy*x + dy;
-
-    qreal px = t.m13();
-    qreal py = t.m23();
-    qreal pz = t.m33();
-    if (!t.isAffine()) {
-        qreal w_ = px*x + py*y + pz;
-        x_ /= w_;
-        y_ /= w_;
-    }
-    return QPointF(x_,y_);
+    qreal dx = TRANSFORM_APPLIED.m31(); qreal dy = TRANSFORM_APPLIED.m32();
+    TRANSFORM_APPLIED.translate(-dx,-dy);
+    GROUP->moveBy(dx,dy);
+    applyTransformation();
 }
